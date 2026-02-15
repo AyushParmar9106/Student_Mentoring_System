@@ -3,7 +3,11 @@
 import React from 'react'
 import Link from 'next/link'
 
+<<<<<<< HEAD
 export default function StudentHistoryView({ student }: { student: any }) {
+=======
+export default function StudentHistoryView ({ student }: { student: any }) {
+>>>>>>> d282a3810cbf7cbc9068d4230e349a3be90eecd7
   const assignment = student.studentmentor?.[0]
   const totalMeetings = assignment?.studentmentoring?.length || 0
   const latestSession = assignment?.studentmentoring?.[0]
@@ -103,10 +107,18 @@ export default function StudentHistoryView({ student }: { student: any }) {
                     Last Stress Level
                   </span>
                   <span
+<<<<<<< HEAD
                     className={`badge rounded-pill ${latestSession?.StressLevel === 'High'
                       ? 'bg-danger'
                       : 'bg-success'
                       }`}
+=======
+                    className={`badge rounded-pill ${
+                      latestSession?.StressLevel === 'High'
+                        ? 'bg-danger'
+                        : 'bg-success'
+                    }`}
+>>>>>>> d282a3810cbf7cbc9068d4230e349a3be90eecd7
                   >
                     {latestSession?.StressLevel || 'N/A'}
                   </span>
@@ -166,10 +178,18 @@ export default function StudentHistoryView({ student }: { student: any }) {
                       </div>
                       <div className='col-md-4 text-md-end border-start border-secondary-subtle'>
                         <span
+<<<<<<< HEAD
                           className={`badge ${m.AttendanceStatus === 'Present'
                             ? 'text-success'
                             : 'text-danger'
                             } bg-transparent border border-secondary-subtle mb-2`}
+=======
+                          className={`badge ${
+                            m.AttendanceStatus === 'Present'
+                              ? 'text-success'
+                              : 'text-danger'
+                          } bg-transparent border border-secondary-subtle mb-2`}
+>>>>>>> d282a3810cbf7cbc9068d4230e349a3be90eecd7
                         >
                           {m.AttendanceStatus}
                         </span>
@@ -184,6 +204,7 @@ export default function StudentHistoryView({ student }: { student: any }) {
                         {m.StaffOpinion || 'Pending mentor input.'}
                       </span>
                     </div>
+<<<<<<< HEAD
 
                     {/* Student Feedback Section */}
                     {m.StudentsOpinion && (
@@ -228,6 +249,8 @@ export default function StudentHistoryView({ student }: { student: any }) {
                         </a>
                       </div>
                     )}
+=======
+>>>>>>> d282a3810cbf7cbc9068d4230e349a3be90eecd7
                   </div>
                 </div>
               </div>
@@ -308,6 +331,10 @@ export default function StudentHistoryView({ student }: { student: any }) {
           }
         }
       `}</style>
+<<<<<<< HEAD
     </div >
+=======
+    </div>
+>>>>>>> d282a3810cbf7cbc9068d4230e349a3be90eecd7
   )
 }

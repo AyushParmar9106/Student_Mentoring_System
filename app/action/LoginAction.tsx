@@ -1,5 +1,9 @@
 'use server'
+<<<<<<< HEAD
 import { prisma } from '../lib/prisma'
+=======
+import { prisma } from '@/app/lib/prisma'
+>>>>>>> d282a3810cbf7cbc9068d4230e349a3be90eecd7
 import { redirect } from 'next/navigation'
 
 export async function LoginAction (prevState: any, formData: FormData) {

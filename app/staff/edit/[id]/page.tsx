@@ -1,5 +1,10 @@
+<<<<<<< HEAD
 import { editStaff } from '@/app/action/editStaff'
 import { prisma } from '@/app/lib/prisma'
+=======
+import { prisma } from '@/app/lib/prisma'
+import { editStaff } from '@/app/action/editStaff'
+>>>>>>> d282a3810cbf7cbc9068d4230e349a3be90eecd7
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 

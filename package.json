@@ -1,5 +1,9 @@
 {
+<<<<<<< HEAD
   "name": "lab8",
+=======
+  "name": "student_mentoring",
+>>>>>>> d282a3810cbf7cbc9068d4230e349a3be90eecd7
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -13,6 +17,7 @@
     "@prisma/client": "^7.2.0",
     "bootstrap": "^5.3.8",
     "bootstrap-icons": "^1.13.1",
+<<<<<<< HEAD
     "mysql2": "^3.16.1",
     "next": "16.1.4",
     "next-themes": "^0.4.6",
@@ -20,6 +25,14 @@
     "react": "19.2.3",
     "react-dom": "19.2.3",
     "use-debounce": "^10.1.0"
+=======
+    "mysql2": "^3.16.0",
+    "next": "16.1.2",
+    "next-themes": "^0.4.6",
+    "prisma": "^7.2.0",
+    "react": "19.2.3",
+    "react-dom": "19.2.3"
+>>>>>>> d282a3810cbf7cbc9068d4230e349a3be90eecd7
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
@@ -27,7 +40,11 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
+<<<<<<< HEAD
     "eslint-config-next": "16.1.4",
+=======
+    "eslint-config-next": "16.1.2",
+>>>>>>> d282a3810cbf7cbc9068d4230e349a3be90eecd7
     "tailwindcss": "^4",
     "typescript": "^5"
   }

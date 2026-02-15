@@ -2,8 +2,15 @@
 
 import { useActionState } from 'react'
 import { LoginAction } from '@/app/action/LoginAction'
+<<<<<<< HEAD
 
 export default function LoginPage () {
+=======
+import Link from 'next/link'
+
+export default function LoginPage () {
+  // state will capture the { error: ... } returned from your LoginAction [cite: 9]
+>>>>>>> d282a3810cbf7cbc9068d4230e349a3be90eecd7
   const [state, formAction] = useActionState(LoginAction, null)
 
   return (
@@ -27,6 +34,10 @@ export default function LoginPage () {
         </div>
 
         <form action={formAction}>
+<<<<<<< HEAD
+=======
+          {/* Validation Error Alert */}
+>>>>>>> d282a3810cbf7cbc9068d4230e349a3be90eecd7
           {state?.error && (
             <div className='alert alert-danger py-2 small text-center rounded-3 border-danger-subtle'>
               <i className='bi bi-exclamation-triangle-fill me-2'></i>
@@ -34,6 +45,10 @@ export default function LoginPage () {
             </div>
           )}
 
+<<<<<<< HEAD
+=======
+          {/* Role Selection: Radio buttons determine which table to query [cite: 9, 40, 43] */}
+>>>>>>> d282a3810cbf7cbc9068d4230e349a3be90eecd7
           <label className='form-label fw-bold text-body small text-uppercase mb-2'>
             I am a:
           </label>

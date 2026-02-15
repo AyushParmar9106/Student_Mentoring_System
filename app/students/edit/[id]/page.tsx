@@ -1,7 +1,13 @@
 import { editStudent } from '@/app/action/editStudent'
+<<<<<<< HEAD
 import React from 'react'
 import Link from 'next/link'
 import { prisma } from '@/app/lib/prisma'
+=======
+import { prisma } from '@/app/lib/prisma'
+import React from 'react'
+import Link from 'next/link'
+>>>>>>> d282a3810cbf7cbc9068d4230e349a3be90eecd7
 
 async function EditStudentPage ({
   params

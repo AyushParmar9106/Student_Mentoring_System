@@ -1,8 +1,15 @@
 import React from 'react'
+<<<<<<< HEAD
 import Link from 'next/link'
 import DeleteStaff from '@/app/action/DeleteStaff'
 import DeleteBtn from '@/app/ui/DeleteBtn'
 import { prisma } from '../lib/prisma'
+=======
+import { prisma } from '@/app/lib/prisma'
+import Link from 'next/link'
+import DeleteStaff from '@/app/action/DeleteStaff'
+import DeleteBtn from '@/app/ui/DeleteBtn'
+>>>>>>> d282a3810cbf7cbc9068d4230e349a3be90eecd7
 
 export default async function StaffDirectory () {
   const data = await prisma.staff.findMany({

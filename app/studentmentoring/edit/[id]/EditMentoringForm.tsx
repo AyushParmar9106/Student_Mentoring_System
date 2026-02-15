@@ -8,10 +8,16 @@ import { editStudentMentoring } from '@/app/action/editStudentMentoring'
 const formatDate = (date: any) =>
   date ? new Date(date).toISOString().split('T')[0] : ''
 
+<<<<<<< HEAD
 export default function EditMentoringForm({ assignment }: { assignment: any }) {
   const [error, setError] = useState<string | null>(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isParentVisible, setIsParentVisible] = useState(assignment?.IsParentPresent || false)
+=======
+export default function EditMentoringForm ({ assignment }: { assignment: any }) {
+  const [error, setError] = useState<string | null>(null)
+  const [isSubmitting, setIsSubmitting] = useState(false)
+>>>>>>> d282a3810cbf7cbc9068d4230e349a3be90eecd7
 
   /* ---------- Safety Loader ---------- */
   if (!assignment) {
@@ -24,7 +30,11 @@ export default function EditMentoringForm({ assignment }: { assignment: any }) {
   }
 
   /* ---------- Client Validation Wrapper ---------- */
+<<<<<<< HEAD
   async function clientAction(formData: FormData) {
+=======
+  async function clientAction (formData: FormData) {
+>>>>>>> d282a3810cbf7cbc9068d4230e349a3be90eecd7
     const mentoringDate = formData.get('date') as string
     const nextDate = formData.get('nextDate') as string
 
@@ -199,6 +209,7 @@ export default function EditMentoringForm({ assignment }: { assignment: any }) {
                 defaultValue={assignment.StaffOpinion || ''}
               />
             </div>
+<<<<<<< HEAD
 
             <div className='mt-3'>
               <label className='form-label fw-semibold'>Student Opinion</label>
@@ -322,6 +333,8 @@ export default function EditMentoringForm({ assignment }: { assignment: any }) {
               />
               <div className="form-text small">Accepted formats: PDF, Word, Image. (Max 5MB)</div>
             </div>
+=======
+>>>>>>> d282a3810cbf7cbc9068d4230e349a3be90eecd7
           </div>
 
           {/* Footer */}

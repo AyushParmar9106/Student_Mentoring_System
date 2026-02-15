@@ -13,6 +13,7 @@ pnpm dev
 # or
 bun dev
 ```
+<<<<<<< HEAD
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
@@ -34,3 +35,19 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+=======
+### demo password for different dashboard
+
+1. Student:-
+    Mail: studentdemo@gmail.com,  
+    pass: student@123 , 
+
+2. admin:-
+    mail:ayush9106@gmail.com,
+    password: ayush9106
+
+3. Staff:-
+    mail : staffdemo@gmail.com
+    pass : staff@123
+
+>>>>>>> d282a3810cbf7cbc9068d4230e349a3be90eecd7
