@@ -3,7 +3,7 @@
 import React from 'react'
 import Link from 'next/link'
 
-export default function StudentHistoryView ({ student }: { student: any }) {
+export default function StudentHistoryView({ student }: { student: any }) {
   const assignment = student.studentmentor?.[0]
   const totalMeetings = assignment?.studentmentoring?.length || 0
   const latestSession = assignment?.studentmentoring?.[0]
@@ -103,11 +103,10 @@ export default function StudentHistoryView ({ student }: { student: any }) {
                     Last Stress Level
                   </span>
                   <span
-                    className={`badge rounded-pill ${
-                      latestSession?.StressLevel === 'High'
-                        ? 'bg-danger'
-                        : 'bg-success'
-                    }`}
+                    className={`badge rounded-pill ${latestSession?.StressLevel === 'High'
+                      ? 'bg-danger'
+                      : 'bg-success'
+                      }`}
                   >
                     {latestSession?.StressLevel || 'N/A'}
                   </span>
@@ -167,11 +166,10 @@ export default function StudentHistoryView ({ student }: { student: any }) {
                       </div>
                       <div className='col-md-4 text-md-end border-start border-secondary-subtle'>
                         <span
-                          className={`badge ${
-                            m.AttendanceStatus === 'Present'
-                              ? 'text-success'
-                              : 'text-danger'
-                          } bg-transparent border border-secondary-subtle mb-2`}
+                          className={`badge ${m.AttendanceStatus === 'Present'
+                            ? 'text-success'
+                            : 'text-danger'
+                            } bg-transparent border border-secondary-subtle mb-2`}
                         >
                           {m.AttendanceStatus}
                         </span>
@@ -186,6 +184,50 @@ export default function StudentHistoryView ({ student }: { student: any }) {
                         {m.StaffOpinion || 'Pending mentor input.'}
                       </span>
                     </div>
+
+                    {/* Student Feedback Section */}
+                    {m.StudentsOpinion && (
+                      <div className='mt-2 p-3 bg-body-tertiary rounded-3 border border-secondary-subtle border-start border-4 border-info'>
+                        <label className='d-block text-info smaller text-uppercase fw-bold mb-1'>
+                          Student Feedback
+                        </label>
+                        <span className='text-body small fst-italic'>
+                          "{m.StudentsOpinion}"
+                        </span>
+                      </div>
+                    )}
+
+                    {/* Parent Interaction Section */}
+                    {m.IsParentPresent && (
+                      <div className='mt-2 p-3 bg-warning-subtle rounded-3 border border-warning-subtle'>
+                        <div className='d-flex justify-content-between align-items-center mb-1'>
+                          <label className='text-warning-emphasis smaller text-uppercase fw-bold'>
+                            <i className='bi bi-people-fill me-1'></i>
+                            Parent Interaction
+                          </label>
+                          <span className='badge bg-warning text-dark border border-warning smaller'>
+                            {m.ParentName} ({m.ParentMobileNo})
+                          </span>
+                        </div>
+                        <span className='text-body small'>
+                          {m.ParentsOpinion || 'No specific remarks recorded.'}
+                        </span>
+                      </div>
+                    )}
+
+                    {/* Supporting Documents Section */}
+                    {m.MentoringDocument && (
+                      <div className="mt-3 text-end d-print-none">
+                        <a
+                          href={m.MentoringDocument}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="btn btn-sm btn-outline-secondary rounded-pill"
+                        >
+                          <i className="bi bi-paperclip me-1"></i> View Attached Document
+                        </a>
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
@@ -266,6 +308,6 @@ export default function StudentHistoryView ({ student }: { student: any }) {
           }
         }
       `}</style>
-    </div>
+    </div >
   )
 }

@@ -1,10 +1,16 @@
-"use client";
-
 import React from "react";
 import Link from "next/link";
+import { prisma } from "./lib/prisma";
 
-// In a real Server Component, you would fetch these from Prisma
-export default function Home() {
+export const dynamic = 'force-dynamic'; // Ensure real-time data
+
+export default async function Home() {
+  // Fetch real-time counts from the database
+  const studentCount = await prisma.students.count();
+  const staffCount = await prisma.staff.count();
+  const mentoringMapCount = await prisma.studentmentor.count();
+  const sessionCount = await prisma.studentmentoring.count();
+
   const menuItems = [
     {
       title: "Student Directory",
@@ -12,7 +18,7 @@ export default function Home() {
       link: "/students",
       icon: "bi-people-fill",
       gradient: "linear-gradient(45deg, #0d6efd, #0dcaf0)",
-      status: "Database Active",
+      status: `${studentCount} Students Active`,
     },
     {
       title: "Faculty Staff",
@@ -20,7 +26,7 @@ export default function Home() {
       link: "/staff",
       icon: "bi-person-vcard-fill",
       gradient: "linear-gradient(45deg, #198754, #20c997)",
-      status: "Mentors Loaded",
+      status: `${staffCount} Mentors Loaded`,
     },
     {
       title: "Mentor Mapping",
@@ -28,7 +34,7 @@ export default function Home() {
       link: "/studentmentor",
       icon: "bi-diagram-3-fill",
       gradient: "linear-gradient(135deg, #6610f2, #6f42c1)",
-      status: "Relational Sync",
+      status: `${mentoringMapCount} Relations Sync`,
     },
     {
       title: "Session Logs",
@@ -36,7 +42,7 @@ export default function Home() {
       link: "/studentmentoring",
       icon: "bi-journal-check",
       gradient: "linear-gradient(45deg, #fd7e14, #ffc107)",
-      status: "History Online",
+      status: `${sessionCount} Sessions Logged`,
     },
   ];
 
@@ -54,9 +60,9 @@ export default function Home() {
             </p>
           </div>
           <div className="col-md-4 text-md-end text-center mt-3 mt-md-0">
-             <Link href="/Login" className="btn btn-primary rounded-pill px-4 py-2 fw-bold shadow-sm">
-                <i className="bi bi-box-arrow-in-right me-2"></i>Sign In to Dashboard
-             </Link>
+            <Link href="/Login" className="btn btn-primary rounded-pill px-4 py-2 fw-bold shadow-sm">
+              <i className="bi bi-box-arrow-in-right me-2"></i>Sign In to Dashboard
+            </Link>
           </div>
         </div>
 
@@ -71,10 +77,10 @@ export default function Home() {
                     <div className="d-flex justify-content-between align-items-start mb-4">
                       <div className="p-3 rounded-4 bg-body-secondary shadow-sm">
                         <i className={`bi ${item.icon} fs-2`} style={{
-                            background: item.gradient,
-                            WebkitBackgroundClip: "text",
-                            WebkitTextFillColor: "transparent",
-                          }}></i>
+                          background: item.gradient,
+                          WebkitBackgroundClip: "text",
+                          WebkitTextFillColor: "transparent",
+                        }}></i>
                       </div>
                       <span className="badge bg-body-secondary text-secondary border border-secondary-subtle small px-2 py-1">
                         {item.status}
@@ -96,19 +102,7 @@ export default function Home() {
           ))}
         </div>
 
-       
       </div>
-
-      <style jsx global>{`
-        .card-hover:hover {
-          transform: translateY(-8px);
-          box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.15) !important;
-          border: 1px solid rgba(13, 110, 253, 0.25) !important;
-        }
-        .transition-all {
-          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-      `}</style>
     </div>
   );
 }
