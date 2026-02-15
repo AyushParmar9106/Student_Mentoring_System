@@ -1,12 +1,8 @@
 'use server'
-<<<<<<< HEAD
-import { prisma } from '../lib/prisma'
-=======
 import { prisma } from '@/app/lib/prisma'
->>>>>>> d282a3810cbf7cbc9068d4230e349a3be90eecd7
 import { redirect } from 'next/navigation'
 
-export async function LoginAction (prevState: any, formData: FormData) {
+export async function LoginAction(prevState: any, formData: FormData) {
   const role = formData.get('role')
   const username = (formData.get('username') as string)?.trim()
   const password = (formData.get('password') as string)?.trim()

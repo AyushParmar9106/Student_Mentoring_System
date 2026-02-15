@@ -3,7 +3,6 @@ import { prisma } from '@/app/lib/prisma'
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 
-<<<<<<< HEAD
 export async function editStudentMentoring(formData: FormData) {
   // Convert ID to a number safely
   const id = Number(formData.get('StudentMentoringID'))
@@ -30,13 +29,6 @@ export async function editStudentMentoring(formData: FormData) {
 
     filePath = `/uploads/${filename}`
   }
-
-=======
-export async function editStudentMentoring (formData: FormData) {
-  // Convert ID to a number safely
-  const id = Number(formData.get('StudentMentoringID'))
-
->>>>>>> d282a3810cbf7cbc9068d4230e349a3be90eecd7
   await prisma.studentmentoring.update({
     where: { StudentMentoringID: id },
     data: {
@@ -48,7 +40,6 @@ export async function editStudentMentoring (formData: FormData) {
       IssuesDiscussed: formData.get('issues') as string,
       LearnerType: formData.get('learnerType') as string,
       // Handle optional date
-<<<<<<< HEAD
       NextMentoringDate: formData.get('nextDate')
         ? new Date(formData.get('nextDate') as string)
         : null,
@@ -63,21 +54,10 @@ export async function editStudentMentoring (formData: FormData) {
 
       // Update file only if a new one is uploaded
       ...(filePath && { MentoringDocument: filePath }),
-
-=======
-      NextMentoringDate: formData.get('nextDate') 
-        ? new Date(formData.get('nextDate') as string) 
-        : null,
-      StaffOpinion: formData.get('staffOpinion') as string,
->>>>>>> d282a3810cbf7cbc9068d4230e349a3be90eecd7
       Modified: new Date()
     }
   })
 
   revalidatePath('/studentmentoring')
   redirect('/studentmentoring')
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> d282a3810cbf7cbc9068d4230e349a3be90eecd7

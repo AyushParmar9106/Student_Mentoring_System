@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import React from "react";
 import Link from "next/link";
 import { prisma } from "./lib/prisma";
@@ -12,15 +11,6 @@ export default async function Home() {
   const mentoringMapCount = await prisma.studentmentor.count();
   const sessionCount = await prisma.studentmentoring.count();
 
-=======
-"use client";
-
-import React from "react";
-import Link from "next/link";
-
-// In a real Server Component, you would fetch these from Prisma
-export default function Home() {
->>>>>>> d282a3810cbf7cbc9068d4230e349a3be90eecd7
   const menuItems = [
     {
       title: "Student Directory",
@@ -28,11 +18,7 @@ export default function Home() {
       link: "/students",
       icon: "bi-people-fill",
       gradient: "linear-gradient(45deg, #0d6efd, #0dcaf0)",
-<<<<<<< HEAD
       status: `${studentCount} Students Active`,
-=======
-      status: "Database Active",
->>>>>>> d282a3810cbf7cbc9068d4230e349a3be90eecd7
     },
     {
       title: "Faculty Staff",
@@ -40,11 +26,7 @@ export default function Home() {
       link: "/staff",
       icon: "bi-person-vcard-fill",
       gradient: "linear-gradient(45deg, #198754, #20c997)",
-<<<<<<< HEAD
       status: `${staffCount} Mentors Loaded`,
-=======
-      status: "Mentors Loaded",
->>>>>>> d282a3810cbf7cbc9068d4230e349a3be90eecd7
     },
     {
       title: "Mentor Mapping",
@@ -52,11 +34,7 @@ export default function Home() {
       link: "/studentmentor",
       icon: "bi-diagram-3-fill",
       gradient: "linear-gradient(135deg, #6610f2, #6f42c1)",
-<<<<<<< HEAD
       status: `${mentoringMapCount} Relations Sync`,
-=======
-      status: "Relational Sync",
->>>>>>> d282a3810cbf7cbc9068d4230e349a3be90eecd7
     },
     {
       title: "Session Logs",
@@ -64,11 +42,7 @@ export default function Home() {
       link: "/studentmentoring",
       icon: "bi-journal-check",
       gradient: "linear-gradient(45deg, #fd7e14, #ffc107)",
-<<<<<<< HEAD
       status: `${sessionCount} Sessions Logged`,
-=======
-      status: "History Online",
->>>>>>> d282a3810cbf7cbc9068d4230e349a3be90eecd7
     },
   ];
 
@@ -86,15 +60,9 @@ export default function Home() {
             </p>
           </div>
           <div className="col-md-4 text-md-end text-center mt-3 mt-md-0">
-<<<<<<< HEAD
             <Link href="/Login" className="btn btn-primary rounded-pill px-4 py-2 fw-bold shadow-sm">
               <i className="bi bi-box-arrow-in-right me-2"></i>Sign In to Dashboard
             </Link>
-=======
-             <Link href="/Login" className="btn btn-primary rounded-pill px-4 py-2 fw-bold shadow-sm">
-                <i className="bi bi-box-arrow-in-right me-2"></i>Sign In to Dashboard
-             </Link>
->>>>>>> d282a3810cbf7cbc9068d4230e349a3be90eecd7
           </div>
         </div>
 
@@ -109,17 +77,10 @@ export default function Home() {
                     <div className="d-flex justify-content-between align-items-start mb-4">
                       <div className="p-3 rounded-4 bg-body-secondary shadow-sm">
                         <i className={`bi ${item.icon} fs-2`} style={{
-<<<<<<< HEAD
                           background: item.gradient,
                           WebkitBackgroundClip: "text",
                           WebkitTextFillColor: "transparent",
                         }}></i>
-=======
-                            background: item.gradient,
-                            WebkitBackgroundClip: "text",
-                            WebkitTextFillColor: "transparent",
-                          }}></i>
->>>>>>> d282a3810cbf7cbc9068d4230e349a3be90eecd7
                       </div>
                       <span className="badge bg-body-secondary text-secondary border border-secondary-subtle small px-2 py-1">
                         {item.status}
@@ -140,24 +101,7 @@ export default function Home() {
             </div>
           ))}
         </div>
-
-<<<<<<< HEAD
       </div>
-=======
-       
-      </div>
-
-      <style jsx global>{`
-        .card-hover:hover {
-          transform: translateY(-8px);
-          box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.15) !important;
-          border: 1px solid rgba(13, 110, 253, 0.25) !important;
-        }
-        .transition-all {
-          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-      `}</style>
->>>>>>> d282a3810cbf7cbc9068d4230e349a3be90eecd7
     </div>
   );
 }

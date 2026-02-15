@@ -24,7 +24,6 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
-<<<<<<< HEAD
 
 /* Custom styles moved from app/page.tsx for Server Component compatibility */
 .card-hover:hover {
@@ -36,5 +35,3 @@ body {
 .transition-all {
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
-=======
->>>>>>> d282a3810cbf7cbc9068d4230e349a3be90eecd7

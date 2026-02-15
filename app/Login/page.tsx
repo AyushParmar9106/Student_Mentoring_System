@@ -2,15 +2,10 @@
 
 import { useActionState } from 'react'
 import { LoginAction } from '@/app/action/LoginAction'
-<<<<<<< HEAD
-
-export default function LoginPage () {
-=======
 import Link from 'next/link'
 
-export default function LoginPage () {
-  // state will capture the { error: ... } returned from your LoginAction [cite: 9]
->>>>>>> d282a3810cbf7cbc9068d4230e349a3be90eecd7
+export default function LoginPage() {
+  // state will capture the { error: ... } returned from your LoginAction
   const [state, formAction] = useActionState(LoginAction, null)
 
   return (
@@ -20,7 +15,7 @@ export default function LoginPage () {
         style={{ maxWidth: '450px', width: '100%' }}
       >
         <div className='text-center mb-4'>
-          {/* Logo/Title matching your Dashboard [cite: 3] */}
+          {/* Logo/Title matching your Dashboard */}
           <div
             className='d-inline-flex align-items-center justify-content-center bg-primary text-white rounded-circle mb-3'
             style={{ width: '60px', height: '60px' }}
@@ -29,15 +24,12 @@ export default function LoginPage () {
           </div>
           <h3 className='fw-bold text-body'>Mentor-Pro Login</h3>
           <p className='text-body-secondary small'>
-            Student Mentoring Management System [cite: 3]
+            Student Mentoring Management System
           </p>
         </div>
 
         <form action={formAction}>
-<<<<<<< HEAD
-=======
           {/* Validation Error Alert */}
->>>>>>> d282a3810cbf7cbc9068d4230e349a3be90eecd7
           {state?.error && (
             <div className='alert alert-danger py-2 small text-center rounded-3 border-danger-subtle'>
               <i className='bi bi-exclamation-triangle-fill me-2'></i>
@@ -45,10 +37,7 @@ export default function LoginPage () {
             </div>
           )}
 
-<<<<<<< HEAD
-=======
-          {/* Role Selection: Radio buttons determine which table to query [cite: 9, 40, 43] */}
->>>>>>> d282a3810cbf7cbc9068d4230e349a3be90eecd7
+          {/* Role Selection: Radio buttons determine which table to query */}
           <label className='form-label fw-bold text-body small text-uppercase mb-2'>
             I am a:
           </label>
@@ -86,7 +75,7 @@ export default function LoginPage () {
             </div>
           </div>
 
-          {/* Username / ID: Maps to EnrollmentNo or Email/Mobile [cite: 40, 43] */}
+          {/* Username / ID: Maps to EnrollmentNo or Email/Mobile */}
           <div className='mb-3'>
             <label className='form-label fw-bold text-body small text-uppercase'>
               Username / ID
@@ -108,7 +97,7 @@ export default function LoginPage () {
             </div>
           </div>
 
-          {/* Password field [cite: 40, 43] */}
+          {/* Password field */}
           <div className='mb-4'>
             <label className='form-label fw-bold text-body small text-uppercase'>
               Password

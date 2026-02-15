@@ -3,11 +3,7 @@
 import React from 'react'
 import Link from 'next/link'
 
-<<<<<<< HEAD
 export default function StudentHistoryView({ student }: { student: any }) {
-=======
-export default function StudentHistoryView ({ student }: { student: any }) {
->>>>>>> d282a3810cbf7cbc9068d4230e349a3be90eecd7
   const assignment = student.studentmentor?.[0]
   const totalMeetings = assignment?.studentmentoring?.length || 0
   const latestSession = assignment?.studentmentoring?.[0]
@@ -107,18 +103,10 @@ export default function StudentHistoryView ({ student }: { student: any }) {
                     Last Stress Level
                   </span>
                   <span
-<<<<<<< HEAD
                     className={`badge rounded-pill ${latestSession?.StressLevel === 'High'
                       ? 'bg-danger'
                       : 'bg-success'
                       }`}
-=======
-                    className={`badge rounded-pill ${
-                      latestSession?.StressLevel === 'High'
-                        ? 'bg-danger'
-                        : 'bg-success'
-                    }`}
->>>>>>> d282a3810cbf7cbc9068d4230e349a3be90eecd7
                   >
                     {latestSession?.StressLevel || 'N/A'}
                   </span>
@@ -178,18 +166,10 @@ export default function StudentHistoryView ({ student }: { student: any }) {
                       </div>
                       <div className='col-md-4 text-md-end border-start border-secondary-subtle'>
                         <span
-<<<<<<< HEAD
                           className={`badge ${m.AttendanceStatus === 'Present'
                             ? 'text-success'
                             : 'text-danger'
                             } bg-transparent border border-secondary-subtle mb-2`}
-=======
-                          className={`badge ${
-                            m.AttendanceStatus === 'Present'
-                              ? 'text-success'
-                              : 'text-danger'
-                          } bg-transparent border border-secondary-subtle mb-2`}
->>>>>>> d282a3810cbf7cbc9068d4230e349a3be90eecd7
                         >
                           {m.AttendanceStatus}
                         </span>
@@ -204,7 +184,6 @@ export default function StudentHistoryView ({ student }: { student: any }) {
                         {m.StaffOpinion || 'Pending mentor input.'}
                       </span>
                     </div>
-<<<<<<< HEAD
 
                     {/* Student Feedback Section */}
                     {m.StudentsOpinion && (
@@ -249,16 +228,15 @@ export default function StudentHistoryView ({ student }: { student: any }) {
                         </a>
                       </div>
                     )}
-=======
->>>>>>> d282a3810cbf7cbc9068d4230e349a3be90eecd7
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
+                  </div >
+                </div >
+              </div >
+            ))
+            }
+          </div >
 
           {/* PDF Footer Information - Signature blocks */}
-          <div className='mt-5 pt-5 text-center border-top border-secondary-subtle d-none d-print-block'>
+          < div className='mt-5 pt-5 text-center border-top border-secondary-subtle d-none d-print-block' >
             <div className='row'>
               <div className='col-6'>
                 <div className='mb-5 mt-4 border-bottom border-dark d-inline-block w-50'></div>
@@ -274,9 +252,9 @@ export default function StudentHistoryView ({ student }: { student: any }) {
             <p className='smaller text-body-secondary mt-5'>
               This is an electronically generated report from Mentor-Pro Portal.
             </p>
-          </div>
-        </div>
-      </div>
+          </div >
+        </div >
+      </div >
 
       <style jsx global>{`
         .smaller {
@@ -331,10 +309,6 @@ export default function StudentHistoryView ({ student }: { student: any }) {
           }
         }
       `}</style>
-<<<<<<< HEAD
-    </div >
-=======
     </div>
->>>>>>> d282a3810cbf7cbc9068d4230e349a3be90eecd7
   )
 }

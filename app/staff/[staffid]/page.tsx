@@ -1,12 +1,9 @@
-<<<<<<< HEAD
 
-=======
->>>>>>> d282a3810cbf7cbc9068d4230e349a3be90eecd7
 import { prisma } from '@/app/lib/prisma'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 
-export default async function MentorDashboard ({
+export default async function MentorDashboard({
   params
 }: {
   params: Promise<{ staffid: string }>
@@ -141,11 +138,10 @@ export default async function MentorDashboard ({
                       <td>{m.students?.EnrollmentNo}</td>
                       <td>
                         <span
-                          className={`badge rounded-pill ${
-                            latest?.StressLevel === 'High'
+                          className={`badge rounded-pill ${latest?.StressLevel === 'High'
                               ? 'bg-danger'
                               : 'bg-success-subtle text-success'
-                          }`}
+                            }`}
                         >
                           {latest?.StressLevel || 'No Data'}
                         </span>

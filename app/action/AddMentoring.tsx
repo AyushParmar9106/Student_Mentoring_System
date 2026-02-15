@@ -1,14 +1,10 @@
 'use server'
-<<<<<<< HEAD
 import { writeFile, mkdir } from 'fs/promises'
 import path from 'path'
-=======
->>>>>>> d282a3810cbf7cbc9068d4230e349a3be90eecd7
 import { prisma } from '@/app/lib/prisma'
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 
-<<<<<<< HEAD
 export async function AddMentoring(formData: FormData) {
   const assignmentId = Number(formData.get('assignmentId'))
 
@@ -32,12 +28,6 @@ export async function AddMentoring(formData: FormData) {
       // Let's log it and proceed.
     }
   }
-
-=======
-export async function AddMentoring (formData: FormData) {
-  const assignmentId = Number(formData.get('assignmentId'))
-
->>>>>>> d282a3810cbf7cbc9068d4230e349a3be90eecd7
   await prisma.studentmentoring.create({
     data: {
       StudentMentorID: assignmentId,
@@ -50,7 +40,6 @@ export async function AddMentoring (formData: FormData) {
       NextMentoringDate: formData.get('nextDate')
         ? new Date(formData.get('nextDate') as string)
         : null,
-<<<<<<< HEAD
       StaffOpinion: formData.get('staffOpinion') as string,
       MentoringDocument: filePath, // Save the file path
 
@@ -60,9 +49,6 @@ export async function AddMentoring (formData: FormData) {
       ParentName: (formData.get('parentName') as string) || null,
       ParentMobileNo: (formData.get('parentMobile') as string) || null,
       ParentsOpinion: (formData.get('parentOpinion') as string) || null
-=======
-      StaffOpinion: formData.get('staffOpinion') as string
->>>>>>> d282a3810cbf7cbc9068d4230e349a3be90eecd7
     }
   })
 

@@ -1,13 +1,9 @@
-<<<<<<< HEAD
-import {prisma} from '../../lib/prisma'
-=======
 import { prisma } from '@/app/lib/prisma'
->>>>>>> d282a3810cbf7cbc9068d4230e349a3be90eecd7
 import { manageStudentMentor } from '@/app/action/manageStudentMentor'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 
-export default async function ManageAssignments ({
+export default async function ManageAssignments({
   params
 }: {
   params: Promise<{ staffid: string }>
@@ -61,7 +57,7 @@ export default async function ManageAssignments ({
               <div
                 className='border border-secondary-subtle rounded-3 p-3 bg-body-tertiary'
                 style={{ maxHeight: '400px', overflowY: 'auto' }}
-              >       
+              >
                 <div className='row g-3'>
                   {allStudents.map((student: typeof allStudents[0]) => (
                     <div key={student.StudentID} className='col-md-6 col-lg-4'>
