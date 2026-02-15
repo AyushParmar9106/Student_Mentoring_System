@@ -3,9 +3,8 @@
 import { prisma } from '@/app/lib/prisma'
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
-import { Prisma } from '@prisma/client' // 1. Added this import
 
-export async function manageStudentMentor (formData: FormData) {
+export async function manageStudentMentor(formData: FormData) {
   const StaffID = Number(formData.get('StaffID'))
   const selectedStudentIDs = formData.getAll('StudentIDs').map(Number)
   const fromDateVal = formData.get('FromDate') as string
@@ -13,7 +12,7 @@ export async function manageStudentMentor (formData: FormData) {
 
   try {
     // 2. Explicitly type the 'tx' parameter as Prisma.TransactionClient
-    await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
+    await prisma.$transaction(async (tx) => {
       // 1. Remove all existing assignments for this mentor
       await tx.studentmentor.deleteMany({
         where: { StaffID: StaffID }
