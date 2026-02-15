@@ -3,17 +3,17 @@
 import { prisma } from '@/app/lib/prisma'
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
+import { Prisma } from '@prisma/client' // 1. Added this import
 
 export async function manageStudentMentor (formData: FormData) {
   const StaffID = Number(formData.get('StaffID'))
-  // Get all checked values from the checkbox list
   const selectedStudentIDs = formData.getAll('StudentIDs').map(Number)
   const fromDateVal = formData.get('FromDate') as string
   const description = (formData.get('Description') as string) || ''
 
   try {
-    // Transaction ensures the sync is atomic
-    await prisma.$transaction(async tx => {
+    // 2. Explicitly type the 'tx' parameter as Prisma.TransactionClient
+    await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
       // 1. Remove all existing assignments for this mentor
       await tx.studentmentor.deleteMany({
         where: { StaffID: StaffID }
@@ -34,6 +34,7 @@ export async function manageStudentMentor (formData: FormData) {
     })
   } catch (error) {
     console.error('Management Error:', error)
+    // Optional: Add return { error: "Failed to update" } to handle UI feedback
   }
 
   revalidatePath('/studentmentor')
