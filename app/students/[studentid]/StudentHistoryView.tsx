@@ -4,9 +4,14 @@ import React from 'react'
 import Link from 'next/link'
 
 export default function StudentHistoryView({ student }: { student: any }) {
-  const assignment = student.studentmentor?.[0]
-  const totalMeetings = assignment?.studentmentoring?.length || 0
-  const latestSession = assignment?.studentmentoring?.[0]
+  // Aggregate all mentoring sessions from all assignments
+  const allSessions = student.studentmentor?.flatMap((assignment: any) => assignment.studentmentoring || []) || []
+
+  // Sort by DateOfMentoring descending
+  allSessions.sort((a: any, b: any) => new Date(b.DateOfMentoring).getTime() - new Date(a.DateOfMentoring).getTime())
+
+  const totalMeetings = allSessions.length
+  const latestSession = allSessions[0]
 
   const handlePrint = () => {
     window.print()
@@ -52,6 +57,25 @@ export default function StudentHistoryView({ student }: { student: any }) {
         </div>
 
         <div className='p-4 p-md-5 bg-body'>
+
+          {/* Upcoming Session Alert */}
+          {latestSession?.NextMentoringDate && new Date(latestSession.NextMentoringDate) > new Date() && (
+            <div className="alert alert-warning border-0 shadow-sm d-flex align-items-center mb-5 d-print-none" role="alert">
+              <i className="bi bi-calendar-event-fill fs-3 me-3 text-warning-emphasis"></i>
+              <div>
+                <h5 className="alert-heading fw-bold text-warning-emphasis mb-1">
+                  Upcoming Mentoring Session
+                </h5>
+                <p className="mb-0 text-body-secondary">
+                  Scheduled for <strong className="text-body">{new Date(latestSession.NextMentoringDate).toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}</strong>.
+                  <span className="ms-2 badge bg-warning text-dark rounded-pill">
+                    {Math.ceil((new Date(latestSession.NextMentoringDate).getTime() - new Date().getTime()) / (1000 * 3600 * 24))} days left
+                  </span>
+                </p>
+              </div>
+            </div>
+          )}
+
           {/* Summary Section */}
           <div className='row g-4 mb-5 pb-5 border-bottom border-secondary-subtle'>
             <div className='col-md-7'>
@@ -84,7 +108,7 @@ export default function StudentHistoryView({ student }: { student: any }) {
                     Primary Mentor
                   </label>
                   <span className='text-primary fw-bold'>
-                    {assignment?.staff?.StaffName || 'N/A'}
+                    {latestSession?.studentmentor?.staff?.StaffName || student.studentmentor?.[0]?.staff?.StaffName || 'N/A'}
                   </span>
                 </div>
               </div>
@@ -130,7 +154,7 @@ export default function StudentHistoryView({ student }: { student: any }) {
               Chronological Session History
             </h5>
 
-            {assignment?.studentmentoring?.map((m: any, index: number) => (
+            {allSessions.map((m: any, index: number) => (
               <div
                 key={m.StudentMentoringID}
                 className='mb-5 position-relative ps-4 border-start border-primary border-opacity-25 page-break'
@@ -198,7 +222,7 @@ export default function StudentHistoryView({ student }: { student: any }) {
                     )}
 
                     {/* Parent Interaction Section */}
-                    {m.IsParentPresent && (
+                    {m.IsParentPresent ? (
                       <div className='mt-2 p-3 bg-warning-subtle rounded-3 border border-warning-subtle'>
                         <div className='d-flex justify-content-between align-items-center mb-1'>
                           <label className='text-warning-emphasis smaller text-uppercase fw-bold'>
@@ -211,6 +235,16 @@ export default function StudentHistoryView({ student }: { student: any }) {
                         </div>
                         <span className='text-body small'>
                           {m.ParentsOpinion || 'No specific remarks recorded.'}
+                        </span>
+                      </div>
+                    ) : (
+                      <div className='mt-2 p-3 bg-body-tertiary rounded-3 border border-secondary-subtle border-start border-4 border-secondary opacity-75'>
+                        <label className='d-block text-secondary smaller text-uppercase fw-bold mb-1'>
+                          <i className='bi bi-people me-1'></i>
+                          Parent Interaction
+                        </label>
+                        <span className='text-body-secondary small fst-italic'>
+                          No parents review available in this session.
                         </span>
                       </div>
                     )}

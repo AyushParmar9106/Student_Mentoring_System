@@ -1,12 +1,35 @@
+
 'use client'
 
-import { useActionState } from 'react'
+import { useActionState, useEffect, useState, Suspense } from 'react'
 import { LoginAction } from '@/app/action/LoginAction'
 import Link from 'next/link'
+import { useSearchParams, useRouter } from 'next/navigation'
 
-export default function LoginPage() {
+function LoginContent() {
   // state will capture the { error: ... } returned from your LoginAction
   const [state, formAction] = useActionState(LoginAction, null)
+  const searchParams = useSearchParams()
+  const router = useRouter()
+  const [message, setMessage] = useState('')
+  const [username, setUsername] = useState('')
+  const [role, setRole] = useState('Staff')
+  const [clientError, setClientError] = useState('')
+
+  useEffect(() => {
+    if (searchParams.get('message') === 'PasswordUpdated') {
+      setMessage('Password updated successfully! Please login.')
+    }
+  }, [searchParams])
+
+  const handleForgotPassword = () => {
+    if (!username.trim()) {
+      setClientError('Please enter your Username / ID to reset password.')
+      return
+    }
+    setClientError('')
+    router.push(`/forgot-password?identifier=${encodeURIComponent(username)}&role=${role}`)
+  }
 
   return (
     <div className='container d-flex justify-content-center align-items-center vh-100'>
@@ -29,11 +52,27 @@ export default function LoginPage() {
         </div>
 
         <form action={formAction}>
-          {/* Validation Error Alert */}
-          {state?.error && (
+          {/* Success Message Alert */}
+          {message && (
+            <div className='alert alert-success py-2 small text-center rounded-3 border-success-subtle'>
+              <i className='bi bi-check-circle-fill me-2'></i>
+              {message}
+            </div>
+          )}
+
+          {/* Validation Error Alert (Server) */}
+          {state?.error && !clientError && (
             <div className='alert alert-danger py-2 small text-center rounded-3 border-danger-subtle'>
               <i className='bi bi-exclamation-triangle-fill me-2'></i>
               {state.error}
+            </div>
+          )}
+
+          {/* Validation Error Alert (Client) */}
+          {clientError && (
+            <div className='alert alert-danger py-2 small text-center rounded-3 border-danger-subtle'>
+              <i className='bi bi-exclamation-triangle-fill me-2'></i>
+              {clientError}
             </div>
           )}
 
@@ -49,7 +88,8 @@ export default function LoginPage() {
                 name='role'
                 id='roleStaff'
                 value='Staff'
-                defaultChecked
+                checked={role === 'Staff'}
+                onChange={() => setRole('Staff')}
               />
               <label
                 className='form-check-label text-body fw-medium'
@@ -65,6 +105,8 @@ export default function LoginPage() {
                 name='role'
                 id='roleStudent'
                 value='Student'
+                checked={role === 'Student'}
+                onChange={() => setRole('Student')}
               />
               <label
                 className='form-check-label text-body fw-medium'
@@ -90,6 +132,8 @@ export default function LoginPage() {
                 className='form-control bg-body-tertiary border-secondary-subtle text-body rounded-end-3'
                 placeholder='Enrollment No or Email'
                 required
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
               />
             </div>
             <div className='form-text small text-body-secondary'>
@@ -126,6 +170,7 @@ export default function LoginPage() {
             </button>
             <button
               type='button'
+              onClick={handleForgotPassword}
               className='btn btn-link text-decoration-none text-body-secondary small fw-bold mt-2'
             >
               Forgot Password?
@@ -136,3 +181,12 @@ export default function LoginPage() {
     </div>
   )
 }
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={<div className="container d-flex justify-content-center align-items-center vh-100">Loading...</div>}>
+      <LoginContent />
+    </Suspense>
+  )
+}
+

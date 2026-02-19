@@ -2,8 +2,11 @@
 
 import Link from "next/link";
 import ThemeToggle from "./ThemeToggle";
+import { usePathname } from "next/navigation";
+import { LogoutAction } from "@/app/action/LogoutAction";
 
 export default function Header() {
+  const pathname = usePathname();
   const dateString = new Date().toLocaleDateString("en-GB", {
     day: "2-digit",
     month: "short",
@@ -31,7 +34,7 @@ export default function Header() {
                 className="vr mx-2 text-muted opacity-25 d-none d-sm-inline"
                 style={{ height: "15px" }}
               ></span>
-              <small className="text-muted fw-normal d-none d-sm-inline">
+              <small className="text-muted fw-normal d-none d-smin this -inline">
                 Portal
               </small>
             </span>
@@ -52,8 +55,15 @@ export default function Header() {
               style={{ height: "24px" }}
             ></div>
 
-            {/* The New Pill Toggle */}
             <ThemeToggle />
+
+            {pathname !== '/Login' && (
+              <form action={LogoutAction}>
+                <button type="submit" className="btn btn-outline-danger btn-sm">
+                  <i className="bi bi-box-arrow-right me-1"></i>Logout
+                </button>
+              </form>
+            )}
           </div>
         </div>
       </nav>

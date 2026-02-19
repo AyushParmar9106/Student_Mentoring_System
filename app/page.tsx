@@ -1,6 +1,7 @@
 import React from "react";
 import Link from "next/link";
 import { prisma } from "./lib/prisma";
+import Reminders from "./Components/Reminders";
 
 export const dynamic = 'force-dynamic'; // Ensure real-time data
 
@@ -11,6 +12,15 @@ export default async function Home() {
   const mentoringMapCount = await prisma.studentmentor.count();
   const sessionCount = await prisma.studentmentoring.count();
 
+  // Fetch session
+  const { getSession } = await import("./lib/auth");
+  const session = await getSession();
+
+  const role = session?.user?.role;
+  const isAdmin = role === 'Admin';
+  const isStaff = role === 'Staff';
+  const isStudent = role === 'Student';
+
   const menuItems = [
     {
       title: "Student Directory",
@@ -19,6 +29,7 @@ export default async function Home() {
       icon: "bi-people-fill",
       gradient: "linear-gradient(45deg, #0d6efd, #0dcaf0)",
       status: `${studentCount} Students Active`,
+      allowed: isAdmin || isStaff, // Admin & Staff
     },
     {
       title: "Faculty Staff",
@@ -27,6 +38,7 @@ export default async function Home() {
       icon: "bi-person-vcard-fill",
       gradient: "linear-gradient(45deg, #198754, #20c997)",
       status: `${staffCount} Mentors Loaded`,
+      allowed: isAdmin, // Only Admin
     },
     {
       title: "Mentor Mapping",
@@ -35,6 +47,7 @@ export default async function Home() {
       icon: "bi-diagram-3-fill",
       gradient: "linear-gradient(135deg, #6610f2, #6f42c1)",
       status: `${mentoringMapCount} Relations Sync`,
+      allowed: isAdmin, // Only Admin
     },
     {
       title: "Session Logs",
@@ -43,8 +56,9 @@ export default async function Home() {
       icon: "bi-journal-check",
       gradient: "linear-gradient(45deg, #fd7e14, #ffc107)",
       status: `${sessionCount} Sessions Logged`,
+      allowed: true, // Everyone (Page logic must filter for Student)
     },
-  ];
+  ].filter(item => item.allowed);
 
   return (
     <div className="container-fluid min-vh-100 py-5 bg-body-tertiary px-4">
@@ -60,11 +74,38 @@ export default async function Home() {
             </p>
           </div>
           <div className="col-md-4 text-md-end text-center mt-3 mt-md-0">
-            <Link href="/Login" className="btn btn-primary rounded-pill px-4 py-2 fw-bold shadow-sm">
-              <i className="bi bi-box-arrow-in-right me-2"></i>Sign In to Dashboard
-            </Link>
+            {session ? (
+              <div className="d-flex gap-2 justify-content-md-end justify-content-center align-items-center">
+                <span className="fw-medium text-body me-2 d-none d-md-block">
+                  Hello, {session.user?.name?.split(' ')[0]}
+                  <small className="badge bg-secondary text-white ms-2 fw-normal">{session.user?.role}</small>
+                </span>
+                {session.user?.role === 'Student' && (
+                  <Link href={`/students/${session.user.id}`} className="btn btn-outline-primary rounded-pill px-4 py-2 fw-bold shadow-sm">
+                    <i className="bi bi-person-badge me-2"></i>My Profile
+                  </Link>
+                )}
+                {session.user?.role === 'Staff' && !session.user?.isAdmin && (
+                  <Link href={`/staff/${session.user.id}`} className="btn btn-outline-primary rounded-pill px-4 py-2 fw-bold shadow-sm">
+                    <i className="bi bi-person-badge me-2"></i>My Profile
+                  </Link>
+                )}
+              </div>
+            ) : (
+              <Link href="/Login" className="btn btn-primary rounded-pill px-4 py-2 fw-bold shadow-sm">
+                <i className="bi bi-box-arrow-in-right me-2"></i>Sign In to Dashboard
+              </Link>
+            )}
           </div>
         </div>
+
+        {/* Reminders Section */}
+        <div className="row justify-content-center">
+          <div className="col-12">
+            <Reminders />
+          </div>
+        </div>
+
 
         {/* Dashboard Navigation Grid */}
         <div className="row g-4">

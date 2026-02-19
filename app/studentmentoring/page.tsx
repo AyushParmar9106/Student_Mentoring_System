@@ -25,8 +25,14 @@ async function studentmentoring({
   // Calculate skip for pagination
   const skip = (currentPage - 1) * itemsPerPage
 
+  // Fetch session for RBAC
+  const { getSession } = await import("../lib/auth");
+  const session = await getSession();
+  const isStudent = session?.user?.role === 'Student';
+  const studentId = session?.user?.id;
+
   // WHERE clause for filtering
-  const whereClause = searchQuery
+  const whereClause: any = searchQuery
     ? {
       OR: [
         { IssuesDiscussed: { contains: searchQuery } },
@@ -43,7 +49,15 @@ async function studentmentoring({
         }
       ]
     }
-    : {}
+    : {};
+
+  // Apply Student Filter if role is Student
+  if (isStudent && studentId) {
+    whereClause.studentmentor = {
+      ...whereClause.studentmentor,
+      StudentID: studentId
+    };
+  }
 
   // Fetch data and total count concurrently
   const [data, totalCount] = await Promise.all([
@@ -74,10 +88,14 @@ async function studentmentoring({
       {data.length === 0 ? (
         <div className="text-center py-5 border border-secondary-subtle rounded-4 bg-body-tertiary dashed-border">
           <div className="mb-3 text-secondary opacity-50">
-            <i className="bi bi-search fs-1"></i>
+            <i className="bi bi-inbox fs-1"></i>
           </div>
           <h5 className="fw-bold text-body">No sessions found</h5>
-          <p className="text-body-secondary mb-0">Try adjusting your search criteria or add a new session.</p>
+          <p className="text-body-secondary mb-0">
+            {isStudent
+              ? "You don't have any mentoring sessions recorded yet."
+              : "Try adjusting your search criteria or add a new session."}
+          </p>
         </div>
       ) : (
         <div className='row g-4'>
@@ -109,7 +127,7 @@ async function studentmentoring({
                       </p>
                     </div>
                     <div className="col-md-6 text-md-end">
-                      <small className="text-secondary">
+                      <small className="text-body-secondary">
                         {log.DateOfMentoring ? new Date(log.DateOfMentoring).toLocaleDateString() : 'N/A'}
                       </small>
                     </div>
@@ -119,18 +137,22 @@ async function studentmentoring({
                     "{log.IssuesDiscussed}"
                   </div>
                 </div>
-                <div className='card-footer bg-transparent d-flex justify-content-end gap-2 p-3'>
-                  <Link
-                    href={`/studentmentoring/edit/${log.StudentMentoringID}`}
-                    className='btn btn-sm btn-outline-primary rounded-pill px-3'
-                  >
-                    <i className="bi bi-pencil-square me-1"></i> Edit
-                  </Link>
-                  <DeleteBtn
-                    deleteFn={DeleteStudentMentoring}
-                    id={log.StudentMentoringID}
-                  />
-                </div>
+
+                {/* Hide Actions for Students */}
+                {!isStudent && (
+                  <div className='card-footer bg-transparent d-flex justify-content-end gap-2 p-3'>
+                    <Link
+                      href={`/studentmentoring/edit/${log.StudentMentoringID}`}
+                      className='btn btn-sm btn-outline-primary rounded-pill px-3'
+                    >
+                      <i className="bi bi-pencil-square me-1"></i> Edit
+                    </Link>
+                    <DeleteBtn
+                      deleteFn={DeleteStudentMentoring}
+                      id={log.StudentMentoringID}
+                    />
+                  </div>
+                )}
               </div>
             </div>
           ))}

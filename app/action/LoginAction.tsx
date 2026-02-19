@@ -1,6 +1,7 @@
 'use server'
 import { prisma } from '@/app/lib/prisma'
 import { redirect } from 'next/navigation'
+import { login } from '@/app/lib/auth'
 
 export async function LoginAction(prevState: any, formData: FormData) {
   const role = formData.get('role')
@@ -33,11 +34,19 @@ export async function LoginAction(prevState: any, formData: FormData) {
       }
 
       console.log('Result: Success! Redirecting Student ID:', user.StudentID)
+
+      // Create Session
+      await login({ id: user.StudentID, role: 'Student', name: user.StudentName })
+
       redirect(`/students/${user.StudentID}`)
     } else if (role === 'Staff') {
       // Admin Hardcoded Check
       if (username === 'ayush9106@gmail.com' && password === 'ayush9106') {
         console.log('Result: Admin Success! Redirecting to root.')
+
+        // Create Admin Session
+        await login({ id: 'admin', role: 'Admin', name: 'Ayush Parmar', isAdmin: true })
+
         redirect('/')
       }
 
@@ -55,6 +64,10 @@ export async function LoginAction(prevState: any, formData: FormData) {
       }
 
       console.log('Result: Success! Redirecting Staff ID:', user.StaffID)
+
+      // Create Staff Session
+      await login({ id: user.StaffID, role: 'Staff', name: user.StaffName })
+
       redirect(`/staff/${user.StaffID}`)
     }
   } catch (error: any) {
