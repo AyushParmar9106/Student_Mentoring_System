@@ -65,7 +65,7 @@ export default async function Reminders() {
                 </h5>
             </div>
             <div className="list-group list-group-flush">
-                {upcomingMentoring.map((session: any) => (
+                {upcomingMentoring.map((session: any) => ( // Trigger redeploy
                     <div key={session.StudentMentoringID} className="list-group-item d-flex justify-content-between align-items-center hover-bg-body-tertiary transition-colors">
                         <div>
                             <div className="fw-bold text-body mb-1">{session.studentmentor.students.StudentName}</div>

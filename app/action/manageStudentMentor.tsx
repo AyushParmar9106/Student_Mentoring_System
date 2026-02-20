@@ -4,7 +4,7 @@ import { prisma } from '@/app/lib/prisma'
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 
-import type { Prisma } from '@prisma/client'
+import { Prisma } from '@prisma/client'
 
 export async function manageStudentMentor(formData: FormData) {
   const StaffID = Number(formData.get('StaffID'))
