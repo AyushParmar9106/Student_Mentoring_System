@@ -4,7 +4,9 @@ import Link from 'next/link'
 import DeleteBtn from '@/app/ui/DeleteBtn'
 import DeleteStudentMentor from '@/app/action/DeleteStudentMentor'
 
-async function StudentMentor () {
+export const dynamic = 'force-dynamic'
+
+async function StudentMentor() {
   // Fetching Staff (Mentors) with their assigned students
   const mentorsWithStudents = await prisma.staff.findMany({
     include: {

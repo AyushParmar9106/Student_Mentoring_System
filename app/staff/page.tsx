@@ -4,6 +4,7 @@ import DeleteStaff from '@/app/action/DeleteStaff'
 import DeleteBtn from '@/app/ui/DeleteBtn'
 import { prisma } from '../lib/prisma'
 
+export const dynamic = 'force-dynamic'
 export default async function StaffDirectory() {
   const data = await prisma.staff.findMany({
     include: { studentmentor: true },
