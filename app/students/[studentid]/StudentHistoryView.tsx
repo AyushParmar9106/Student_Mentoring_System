@@ -262,12 +262,11 @@ export default function StudentHistoryView({ student }: { student: any }) {
                         </a>
                       </div>
                     )}
-                  </div >
-                </div >
-              </div >
-            ))
-            }
-          </div >
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
 
           {/* PDF Footer Information - Signature blocks */}
           < div className='mt-5 pt-5 text-center border-top border-secondary-subtle d-none d-print-block' >
