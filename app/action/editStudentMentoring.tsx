@@ -20,14 +20,22 @@ export async function editStudentMentoring(formData: FormData) {
     try {
       await fs.access(uploadDir)
     } catch {
-      await fs.mkdir(uploadDir, { recursive: true })
+      try {
+        await fs.mkdir(uploadDir, { recursive: true })
+      } catch (e) {
+        console.error('Failed to create upload directory:', e)
+      }
     }
 
     const filename = `${Date.now()}-${file.name.replace(/\s/g, '_')}`
     const buffer = Buffer.from(await file.arrayBuffer())
-    await fs.writeFile(path.join(uploadDir, filename), buffer)
-
-    filePath = `/uploads/${filename}`
+    
+    try {
+      await fs.writeFile(path.join(uploadDir, filename), buffer)
+      filePath = `/uploads/${filename}`
+    } catch (e) {
+      console.error('File upload failed:', e)
+    }
   }
   await prisma.studentmentoring.update({
     where: { StudentMentoringID: id },
