@@ -3,6 +3,7 @@
 import React, { useState } from 'react'
 import Link from 'next/link'
 import { editStudentMentoring } from '@/app/action/editStudentMentoring'
+import { UploadButton } from '@/app/utils/uploadthing'
 
 /* ---------- Helper: Safe Date Formatter for <input type="date"> ---------- */
 const formatDate = (date: any) =>
@@ -12,6 +13,7 @@ export default function EditMentoringForm({ assignment }: { assignment: any }) {
   const [error, setError] = useState<string | null>(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isParentVisible, setIsParentVisible] = useState(assignment?.IsParentPresent || false)
+  const [uploadedFileUrl, setUploadedFileUrl] = useState<string | null>(null)
 
   /* ---------- Safety Loader ---------- */
   if (!assignment) {
@@ -312,13 +314,30 @@ export default function EditMentoringForm({ assignment }: { assignment: any }) {
               <label className='form-label fw-semibold'>
                 {assignment.MentoringDocument ? 'Replace Document' : 'Upload Document'}
               </label>
-              <input
-                type='file'
-                name='file'
-                className='form-control bg-body-tertiary border-secondary-subtle text-body'
-                accept='.pdf,.doc,.docx,.jpg,.jpeg,.png'
-              />
-              <div className="form-text small">Accepted formats: PDF, Word, Image. (Max 5MB)</div>
+              {uploadedFileUrl ? (
+                <div className="mb-3 p-3 bg-success-subtle rounded-3 border border-success d-flex justify-content-between align-items-center">
+                  <div>
+                    <i className="bi bi-check-circle-fill text-success me-2"></i>
+                    <span className="fw-bold text-success">File Uploaded Successfully!</span>
+                  </div>
+                  <a href={uploadedFileUrl} target="_blank" rel="noopener noreferrer" className="btn btn-sm btn-outline-success">View</a>
+                </div>
+              ) : (
+                <UploadButton
+                  endpoint="pdfUploader"
+                  onClientUploadComplete={(res) => {
+                    if (res && res[0]) {
+                      setUploadedFileUrl(res[0].url)
+                      alert("Upload Completed")
+                    }
+                  }}
+                  onUploadError={(error: Error) => {
+                    alert(`ERROR! ${error.message}`)
+                  }}
+                  className="mt-2 text-start ut-button:bg-primary ut-button:ut-readying:bg-secondary"
+                />
+              )}
+              <input type="hidden" name="fileUrl" value={uploadedFileUrl || ''} />
             </div>
           </div>
 

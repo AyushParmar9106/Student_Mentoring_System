@@ -8,26 +8,9 @@ import { redirect } from 'next/navigation'
 export async function AddMentoring(formData: FormData) {
   const assignmentId = Number(formData.get('assignmentId'))
 
-  // Handle File Upload
-  const file = formData.get('file') as File | null
-  let filePath = null
-
-  if (file && file.size > 0) {
-    const buffer = Buffer.from(await file.arrayBuffer())
-    const filename = `${Date.now()}-${file.name.replace(/\s+/g, '_')}`
-    const uploadDir = path.join(process.cwd(), 'public', 'uploads')
-
-    try {
-      await mkdir(uploadDir, { recursive: true })
-      await writeFile(path.join(uploadDir, filename), buffer)
-      filePath = `/uploads/${filename}`
-    } catch (e) {
-      console.error('File upload failed:', e)
-      // Decide if we want to fail the whole request or just skip the file.
-      // For now, we'll proceed without the file if upload fails, or throw.
-      // Let's log it and proceed.
-    }
-  }
+  // Check for uploaded file URL
+  const fileUrl = formData.get('fileUrl') as string | null
+  let filePath = fileUrl || undefined
 
   try {
     await prisma.studentmentoring.create({

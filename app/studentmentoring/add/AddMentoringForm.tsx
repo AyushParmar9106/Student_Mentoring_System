@@ -3,10 +3,12 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { AddMentoring } from '@/app/action/AddMentoring'
+import { UploadButton } from '@/app/utils/uploadthing'
 
 export default function AddMentoringForm({ assignmentId }: { assignmentId: number }) {
     const [isParentVisible, setIsParentVisible] = useState(false)
     const [isSubmitting, setIsSubmitting] = useState(false)
+    const [uploadedFileUrl, setUploadedFileUrl] = useState<string | null>(null)
 
     // Wrapper to handle submit loading state
     async function handleSubmit(formData: FormData) {
@@ -219,18 +221,35 @@ export default function AddMentoringForm({ assignmentId }: { assignmentId: numbe
                         ></textarea>
                     </div>
 
-                    {/* File Upload */}
+                    {/* File Upload via Uploadthing */}
                     <div className='col-12'>
                         <label className='form-label text-body-secondary small fw-bold text-uppercase'>
                             Supporting Documents (Optional)
                         </label>
-                        <input
-                            type='file'
-                            name='file'
-                            className='form-control bg-body-tertiary border-secondary-subtle text-body rounded-3'
-                            accept='.pdf,.doc,.docx,.jpg,.jpeg,.png'
-                        />
-                        <div className="form-text small">Accepted formats: PDF, Word, Image. (Max 5MB)</div>
+                        {uploadedFileUrl ? (
+                            <div className="mb-3 p-3 bg-success-subtle rounded-3 border border-success d-flex justify-content-between align-items-center">
+                                <div>
+                                    <i className="bi bi-check-circle-fill text-success me-2"></i>
+                                    <span className="fw-bold text-success">File Uploaded Successfully!</span>
+                                </div>
+                                <a href={uploadedFileUrl} target="_blank" rel="noopener noreferrer" className="btn btn-sm btn-outline-success">View</a>
+                            </div>
+                        ) : (
+                            <UploadButton
+                                endpoint="pdfUploader"
+                                onClientUploadComplete={(res) => {
+                                    if (res && res[0]) {
+                                        setUploadedFileUrl(res[0].url)
+                                        alert("Upload Completed")
+                                    }
+                                }}
+                                onUploadError={(error: Error) => {
+                                    alert(`ERROR! ${error.message}`)
+                                }}
+                                className="mt-2 text-start ut-button:bg-dark ut-button:ut-readying:bg-secondary"
+                            />
+                        )}
+                        <input type="hidden" name="fileUrl" value={uploadedFileUrl || ''} />
                     </div>
 
                     {/* Action Buttons */}

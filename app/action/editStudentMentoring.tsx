@@ -8,35 +8,9 @@ export async function editStudentMentoring(formData: FormData) {
   const id = Number(formData.get('StudentMentoringID'))
 
   // Handle File Upload
-  const file = formData.get('file') as File | null
-  let filePath = undefined // Undefined means "do not update" in Prisma
-
-  if (file && file.size > 0) {
-    const fs = require('fs/promises')
-    const path = require('path')
-
-    // Ensure uploads directory exists
-    const uploadDir = path.join(process.cwd(), 'public/uploads')
-    try {
-      await fs.access(uploadDir)
-    } catch {
-      try {
-        await fs.mkdir(uploadDir, { recursive: true })
-      } catch (e) {
-        console.error('Failed to create upload directory:', e)
-      }
-    }
-
-    const filename = `${Date.now()}-${file.name.replace(/\s/g, '_')}`
-    const buffer = Buffer.from(await file.arrayBuffer())
-    
-    try {
-      await fs.writeFile(path.join(uploadDir, filename), buffer)
-      filePath = `/uploads/${filename}`
-    } catch (e) {
-      console.error('File upload failed:', e)
-    }
-  }
+  // Check for uploaded file URL
+  const fileUrl = formData.get('fileUrl') as string | null
+  let filePath = fileUrl || undefined
   await prisma.studentmentoring.update({
     where: { StudentMentoringID: id },
     data: {
