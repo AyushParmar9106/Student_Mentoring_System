@@ -49,7 +49,7 @@ export default function AddStaffForm () {
                 <div className='row g-4'>
                   {/* Section 1: Authentication */}
                   <div className='col-12 border-bottom pb-2'>
-                    <h5 className='text-dark text-uppercase small fw-bold tracking-wider'>
+                    <h5 className='text-body text-uppercase small fw-bold tracking-wider'>
                       Account Security
                     </h5>
                   </div>
@@ -91,7 +91,7 @@ export default function AddStaffForm () {
 
                   {/* Section 2: Personal Info */}
                   <div className='col-12 border-bottom pb-2 mt-5'>
-                    <h5 className='text-dark text-uppercase small fw-bold tracking-wider'>
+                    <h5 className='text-body text-uppercase small fw-bold tracking-wider'>
                       Professional Profile
                     </h5>
                   </div>

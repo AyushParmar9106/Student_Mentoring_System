@@ -70,7 +70,7 @@ export default function EditMentoringForm({ assignment }: { assignment: any }) {
             <i className='bi bi-pencil-square me-2'></i>
             Edit Mentoring Session
           </h5>
-          <span className='badge bg-light text-primary'>
+          <span className='badge bg-secondary-subtle text-primary'>
             ID #{assignment.StudentMentoringID}
           </span>
         </div>

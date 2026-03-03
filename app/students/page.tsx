@@ -77,7 +77,7 @@ export default async function StudentDirectory({
               <div className='card h-100 shadow-sm border-0 bg-body rounded-4 border border-secondary-subtle'>
                 <div className='card-header bg-primary text-white d-flex justify-content-between p-3 rounded-top-4 border-0'>
                   <span className='fw-bold small'>No: {s.EnrollmentNo}</span>
-                  <span className='badge bg-white text-primary rounded-pill'>
+                  <span className='badge bg-body text-primary rounded-pill'>
                     {s.studentmentor?.length || 0} Mentor(s)
                   </span>
                 </div>

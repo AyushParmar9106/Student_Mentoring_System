@@ -13,7 +13,7 @@ interface StaffItem {
   StaffName: string
 }
 
-export default function AddStudentMentorForm ({
+export default function AddStudentMentorForm({
   studentList,
   staffList
 }: {
@@ -182,7 +182,7 @@ export default function AddStudentMentorForm ({
       {/* Optional: Simple internal CSS for hover effect */}
       <style jsx>{`
         .hover-bg-light:hover {
-          background-color: rgba(0, 0, 0, 0.03);
+          background-color: rgba(var(--bs-body-color-rgb), 0.05);
         }
         .cursor-pointer {
           cursor: pointer;
