@@ -2,6 +2,7 @@
 import { prisma } from '@/app/lib/prisma'
 import { redirect } from 'next/navigation'
 import { login } from '@/app/lib/auth'
+import { cookies } from 'next/headers'
 import { loginSchema } from '@/app/lib/zodSchemas'
 
 export async function LoginAction(prevState: any, formData: FormData) {
@@ -52,6 +53,7 @@ export async function LoginAction(prevState: any, formData: FormData) {
 
       // Create Session
       await login({ id: user.StudentID, role: 'Student', name: user.StudentName })
+        ; (await cookies()).set('flash', encodeURIComponent(JSON.stringify({ type: 'success', message: `Welcome back, ${user.StudentName}!` })), { path: '/' });
 
       redirect(`/students/${user.StudentID}`)
     } else if (role === 'Staff') {
@@ -61,6 +63,7 @@ export async function LoginAction(prevState: any, formData: FormData) {
 
         // Create Admin Session
         await login({ id: 'admin', role: 'Admin', name: 'Ayush Parmar', isAdmin: true })
+          ; (await cookies()).set('flash', encodeURIComponent(JSON.stringify({ type: 'success', message: 'Welcome back, Admin!' })), { path: '/' });
 
         redirect('/')
       }
@@ -82,6 +85,7 @@ export async function LoginAction(prevState: any, formData: FormData) {
 
       // Create Staff Session
       await login({ id: user.StaffID, role: 'Staff', name: user.StaffName })
+        ; (await cookies()).set('flash', encodeURIComponent(JSON.stringify({ type: 'success', message: `Welcome back, ${user.StaffName}!` })), { path: '/' });
 
       redirect(`/staff/${user.StaffID}`)
     }

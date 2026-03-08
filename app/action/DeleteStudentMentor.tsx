@@ -3,7 +3,7 @@
 import { revalidatePath } from 'next/cache'
 import { prisma } from '../lib/prisma'
 
-export default async function DeleteStudentMentor (assignmentId: number) {
+export default async function DeleteStudentMentor(assignmentId: number) {
   try {
     await prisma.studentmentor.delete({
       where: {
@@ -13,6 +13,7 @@ export default async function DeleteStudentMentor (assignmentId: number) {
 
     revalidatePath('/students')
     revalidatePath('/staff')
+    revalidatePath('/studentmentor')
 
     return { success: true }
   } catch (error) {

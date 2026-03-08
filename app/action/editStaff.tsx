@@ -3,6 +3,7 @@
 import { prisma } from '@/app/lib/prisma'
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
+import { cookies } from 'next/headers'
 import { editStaffSchema } from '@/app/lib/zodSchemas'
 
 async function editStaff(prevState: any, formData: FormData) {
@@ -40,7 +41,9 @@ async function editStaff(prevState: any, formData: FormData) {
     data: saveObj
   })
 
-  // Clear the cache for the staff list and redirect
+    // Clear the cache for the staff list and redirect
+    ; (await cookies()).set('flash', encodeURIComponent(JSON.stringify({ type: 'update', message: 'Staff profile updated!' })), { path: '/' });
+
   revalidatePath('/staff')
   redirect('/staff')
 }

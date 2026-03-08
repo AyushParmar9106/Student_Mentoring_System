@@ -3,6 +3,7 @@
 import { prisma } from '@/app/lib/prisma'
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
+import { cookies } from 'next/headers'
 import { staffSchema } from '@/app/lib/zodSchemas'
 
 export async function saveStaff(prevState: any, formData: FormData) {
@@ -38,6 +39,8 @@ export async function saveStaff(prevState: any, formData: FormData) {
   } catch (error) {
     return { success: false, message: 'Database error: Could not save staff.' }
   }
+
+  ; (await cookies()).set('flash', encodeURIComponent(JSON.stringify({ type: 'create', message: 'Staff successfully on-boarded!' })), { path: '/' });
 
   revalidatePath('/staff')
   redirect('/staff')

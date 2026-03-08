@@ -3,6 +3,7 @@
 import { prisma } from '@/app/lib/prisma'
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
+import { cookies } from 'next/headers'
 import { editStudentMentorSchema } from '@/app/lib/zodSchemas'
 
 export async function editStudentMentor(prevState: any, formData: FormData) {
@@ -43,6 +44,9 @@ export async function editStudentMentor(prevState: any, formData: FormData) {
     console.error('Database Update Error:', error)
     // In a real app, you might return an error message here
   }
+
+  // Clear the cache for the assignment list and redirect
+  ; (await cookies()).set('flash', encodeURIComponent(JSON.stringify({ type: 'update', message: 'Mentoring assignment updated!' })), { path: '/' });
 
   revalidatePath('/studentmentor')
   redirect('/studentmentor')

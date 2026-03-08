@@ -2,6 +2,7 @@
 import { prisma } from '@/app/lib/prisma'
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
+import { cookies } from 'next/headers'
 import { editMentoringSessionSchema } from '@/app/lib/zodSchemas'
 
 export async function editStudentMentoring(prevState: any, formData: FormData) {
@@ -13,13 +14,13 @@ export async function editStudentMentoring(prevState: any, formData: FormData) {
     agenda: formData.get('agenda'),
     issues: formData.get('issues'),
     learnerType: formData.get('learnerType'),
-    nextDate: formData.get('nextDate'),
-    staffOpinion: formData.get('staffOpinion'),
-    studentOpinion: formData.get('studentOpinion'),
+    nextDate: formData.get('nextDate') || undefined,
+    staffOpinion: formData.get('staffOpinion') || undefined,
+    studentOpinion: formData.get('studentOpinion') || undefined,
     isParentPresent: formData.get('isParentPresent') === 'on',
-    parentName: formData.get('parentName'),
-    parentMobile: formData.get('parentMobile'),
-    parentOpinion: formData.get('parentOpinion'),
+    parentName: formData.get('parentName') || undefined,
+    parentMobile: formData.get('parentMobile') || undefined,
+    parentOpinion: formData.get('parentOpinion') || undefined,
   })
 
   if (!validatedFields.success) {
@@ -74,6 +75,9 @@ export async function editStudentMentoring(prevState: any, formData: FormData) {
       Modified: new Date()
     }
   })
+
+    // Clear the cache and redirect
+    ; (await cookies()).set('flash', encodeURIComponent(JSON.stringify({ type: 'update', message: 'Mentoring session updated!' })), { path: '/' });
 
   revalidatePath('/studentmentoring')
   redirect('/studentmentoring')

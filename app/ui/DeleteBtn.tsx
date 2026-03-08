@@ -1,6 +1,7 @@
 'use client'
+import { triggerToast } from '@/app/lib/toastUtils'
 
-export default function DeleteBtn (props: any) {
+export default function DeleteBtn(props: any) {
   return (
     <>
       <button
@@ -9,6 +10,7 @@ export default function DeleteBtn (props: any) {
           // It's good practice to add a confirmation
           if (confirm('Are you sure?')) {
             await props.deleteFn(props.id)
+            triggerToast('delete', 'Record successfully deleted')
           }
         }}
       >

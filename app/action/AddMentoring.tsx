@@ -4,6 +4,8 @@ import path from 'path'
 import { prisma } from '@/app/lib/prisma'
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
+import { cookies } from 'next/headers'
+import { cookies as _unusedCookies } from 'next/headers'
 import { mentoringSessionSchema } from '@/app/lib/zodSchemas'
 
 export async function AddMentoring(prevState: any, formData: FormData) {
@@ -18,13 +20,13 @@ export async function AddMentoring(prevState: any, formData: FormData) {
     agenda: formData.get('agenda'),
     issues: formData.get('issues'),
     learnerType: formData.get('learnerType'),
-    nextDate: formData.get('nextDate'),
-    staffOpinion: formData.get('staffOpinion'),
-    studentOpinion: formData.get('studentOpinion'),
+    nextDate: formData.get('nextDate') || undefined,
+    staffOpinion: formData.get('staffOpinion') || undefined,
+    studentOpinion: formData.get('studentOpinion') || undefined,
     isParentPresent: formData.get('isParentPresent') === 'on',
-    parentName: formData.get('parentName'),
-    parentMobile: formData.get('parentMobile'),
-    parentOpinion: formData.get('parentOpinion'),
+    parentName: formData.get('parentName') || undefined,
+    parentMobile: formData.get('parentMobile') || undefined,
+    parentOpinion: formData.get('parentOpinion') || undefined,
   })
 
   if (!validatedFields.success) {
@@ -87,6 +89,8 @@ export async function AddMentoring(prevState: any, formData: FormData) {
     }
     return { success: false, message: 'An unexpected error occurred.' }
   }
+
+  ; (await cookies()).set('flash', encodeURIComponent(JSON.stringify({ type: 'create', message: 'Mentoring session logged successfully!' })), { path: '/' });
 
   revalidatePath('/studentmentoring')
   redirect('/studentmentoring')

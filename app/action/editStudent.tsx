@@ -3,6 +3,7 @@
 import { prisma } from '@/app/lib/prisma'
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
+import { cookies } from 'next/headers'
 import { editStudentSchema } from '@/app/lib/zodSchemas'
 
 export async function editStudent(prevState: any, formData: FormData) {
@@ -42,7 +43,9 @@ export async function editStudent(prevState: any, formData: FormData) {
     data: saveObj
   })
 
-  // Clear the cache for the student list and redirect
+    // Clear the cache for the student list and redirect
+    ; (await cookies()).set('flash', encodeURIComponent(JSON.stringify({ type: 'update', message: 'Student profile updated!' })), { path: '/' });
+
   revalidatePath('/students')
   redirect('/students')
 }

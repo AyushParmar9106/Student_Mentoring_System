@@ -3,6 +3,7 @@
 import { prisma } from '../lib/prisma'
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
+import { cookies } from 'next/headers'
 import { studentSchema } from '@/app/lib/zodSchemas'
 
 export async function saveStudent(prevState: any, formData: FormData) {
@@ -60,6 +61,8 @@ export async function saveStudent(prevState: any, formData: FormData) {
         'Error: Could not register student. Make sure the Enrollment No is unique.'
     }
   }
+
+  ; (await cookies()).set('flash', encodeURIComponent(JSON.stringify({ type: 'create', message: 'Student successfully admitted!' })), { path: '/' });
 
   revalidatePath('/students')
   redirect('/students')

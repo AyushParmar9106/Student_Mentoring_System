@@ -3,6 +3,7 @@
 import { prisma } from '@/app/lib/prisma'
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
+import { cookies } from 'next/headers'
 import { manageStudentMentorSchema } from '@/app/lib/zodSchemas'
 
 
@@ -46,6 +47,8 @@ export async function manageStudentMentor(prevState: any, formData: FormData) {
   } catch (error) {
     console.error('Management Error:', error)
   }
+
+  ; (await cookies()).set('flash', encodeURIComponent(JSON.stringify({ type: 'update', message: 'Mentoring assignments updated!' })), { path: '/' });
 
   revalidatePath('/studentmentor')
   redirect('/studentmentor')

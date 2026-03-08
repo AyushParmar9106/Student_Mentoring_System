@@ -8,6 +8,7 @@ import "./globals.css";
 import { ThemeProvider } from "./Components/ThemeProvider";
 import Header from "./Components/Header";
 import Footer from "./Components/Footer";
+import FlashToaster from "./Components/FlashToaster";
 
 const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
 const geistMono = Geist_Mono({
@@ -50,6 +51,8 @@ export default function RootLayout({
 
           {/* Use the dedicated Footer component */}
           <Footer />
+
+          <FlashToaster />
         </ThemeProvider>
       </body>
     </html>

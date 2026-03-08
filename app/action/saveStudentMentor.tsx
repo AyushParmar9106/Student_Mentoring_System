@@ -3,6 +3,8 @@
 import { prisma } from '@/app/lib/prisma'
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
+import { cookies } from 'next/headers'
+import { cookies as _unusedCookies } from 'next/headers'
 import { assignMentorSchema } from '@/app/lib/zodSchemas'
 
 export async function saveAssignment(prevState: any, formData: FormData) {
@@ -46,6 +48,8 @@ export async function saveAssignment(prevState: any, formData: FormData) {
       message: 'An error occurred while linking students. Please try again.'
     }
   }
+
+  ; (await cookies()).set('flash', encodeURIComponent(JSON.stringify({ type: 'create', message: 'Mentoring assignment created!' })), { path: '/' });
 
   revalidatePath('/studentmentor')
   redirect('/studentmentor')
