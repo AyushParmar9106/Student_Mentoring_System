@@ -56,8 +56,7 @@ export default function AddStudentMentorForm({
                     </label>
                     <select
                       name='StaffID'
-                      className='form-select bg-body shadow-none'
-                      required
+                      className={`form-select bg-body shadow-none ${state?.errors?.StaffID ? 'is-invalid' : ''}`}
                     >
                       <option value=''>Select Mentor...</option>
                       {staffList.map(st => (
@@ -66,6 +65,9 @@ export default function AddStudentMentorForm({
                         </option>
                       ))}
                     </select>
+                    {state?.errors?.StaffID && (
+                      <div className="text-danger small mt-1">{state.errors.StaffID[0]}</div>
+                    )}
                   </div>
 
                   {/* Student Selection (Checkbox List) */}
@@ -121,6 +123,9 @@ export default function AddStudentMentorForm({
                       All checked students will be linked to the selected
                       mentor.
                     </div>
+                    {state?.errors?.StudentIDs && (
+                      <div className="text-danger small mt-1">{state.errors.StudentIDs[0]}</div>
+                    )}
                   </div>
 
                   <div className='col-md-6 mt-4'>
@@ -130,9 +135,11 @@ export default function AddStudentMentorForm({
                     <input
                       type='date'
                       name='FromDate'
-                      className='form-control bg-body shadow-none'
-                      required
+                      className={`form-control bg-body shadow-none ${state?.errors?.FromDate ? 'is-invalid' : ''}`}
                     />
+                    {state?.errors?.FromDate && (
+                      <div className="text-danger small mt-1">{state.errors.FromDate[0]}</div>
+                    )}
                   </div>
 
                   <div className='col-md-6 mt-4'>

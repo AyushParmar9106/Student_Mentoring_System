@@ -129,16 +129,19 @@ function LoginContent() {
               <input
                 type='text'
                 name='username'
-                className='form-control bg-body-tertiary border-secondary-subtle text-body rounded-end-3'
+                className={`form-control bg-body-tertiary border-secondary-subtle text-body rounded-end-3 ${state?.errors?.username ? 'is-invalid' : ''}`}
                 placeholder='Enrollment No or Email'
-                required
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
               />
             </div>
-            <div className='form-text small text-body-secondary'>
-              Use Enrollment No for Student, Email for Staff.
-            </div>
+            {state?.errors?.username ? (
+              <div className="text-danger small mt-1">{state.errors.username[0]}</div>
+            ) : (
+              <div className='form-text small text-body-secondary'>
+                Use Enrollment No for Student, Email for Staff.
+              </div>
+            )}
           </div>
 
           {/* Password field */}
@@ -153,11 +156,13 @@ function LoginContent() {
               <input
                 type='password'
                 name='password'
-                className='form-control bg-body-tertiary border-secondary-subtle text-body rounded-end-3'
+                className={`form-control bg-body-tertiary border-secondary-subtle text-body rounded-end-3 ${state?.errors?.password ? 'is-invalid' : ''}`}
                 placeholder='••••••••'
-                required
               />
             </div>
+            {state?.errors?.password && (
+              <div className="text-danger small mt-1">{state.errors.password[0]}</div>
+            )}
           </div>
 
           {/* Login Actions */}

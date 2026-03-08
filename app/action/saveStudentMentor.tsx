@@ -3,31 +3,38 @@
 import { prisma } from '@/app/lib/prisma'
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
+import { assignMentorSchema } from '@/app/lib/zodSchemas'
 
-export async function saveAssignment (prevState: any, formData: FormData) {
-  const staffId = formData.get('StaffID') as string
-  const fromDate = formData.get('FromDate') as string
-  const toDate = formData.get('ToDate') as string
-  const description = formData.get('Description') as string
+export async function saveAssignment(prevState: any, formData: FormData) {
+  const validatedFields = assignMentorSchema.safeParse({
+    StaffID: formData.get('StaffID'),
+    StudentIDs: formData.getAll('StudentIDs'),
+    FromDate: formData.get('FromDate'),
+    ToDate: formData.get('ToDate'),
+    Description: formData.get('Description'),
+  })
 
-  // CRITICAL FIX: Use .getAll() to capture the array of selected IDs
-  const studentIds = formData.getAll('StudentIDs') as string[]
-
-  if (studentIds.length === 0) {
-    return { success: false, message: 'Please select at least one student.' }
+  if (!validatedFields.success) {
+    return {
+      success: false,
+      message: 'Please review the highlighted errors.',
+      errors: validatedFields.error.flatten().fieldErrors,
+    }
   }
+
+  const { StaffID, StudentIDs, FromDate, ToDate, Description } = validatedFields.data
 
   try {
     // We use a transaction to ensure all assignments are saved correctly
     await prisma.$transaction(
-      studentIds.map(id =>
+      StudentIDs.map(id =>
         prisma.studentmentor.create({
           data: {
             StudentID: parseInt(id),
-            StaffID: parseInt(staffId),
-            FromDate: new Date(fromDate),
-            ToDate: toDate ? new Date(toDate) : null,
-            Description: description
+            StaffID: parseInt(StaffID),
+            FromDate: new Date(FromDate),
+            ToDate: ToDate ? new Date(ToDate) : null,
+            Description: Description || ''
           }
         })
       )

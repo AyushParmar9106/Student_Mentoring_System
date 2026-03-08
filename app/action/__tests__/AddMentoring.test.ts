@@ -45,11 +45,16 @@ describe('AddMentoring Server Action', () => {
         formData.append('agenda', 'Study Plan')
         formData.append('issues', 'None')
         formData.append('learnerType', 'Visual')
+        formData.append('nextDate', '')
         formData.append('staffOpinion', 'Good')
         formData.append('studentOpinion', 'Helpful')
-        // ... add other required fields ...
+        formData.append('isParentPresent', 'off')
+        formData.append('parentName', '')
+        formData.append('parentMobile', '')
+        formData.append('parentOpinion', '')
 
-        await AddMentoring(formData)
+        const res = await AddMentoring(null, formData)
+        if (res && res.success === false) { console.log('Validation errors:', res.errors); }
 
         expect(prisma.studentmentoring.create).toHaveBeenCalledWith(
             expect.objectContaining({
@@ -67,9 +72,23 @@ describe('AddMentoring Server Action', () => {
         formData.append('assignmentId', '1')
         formData.append('date', '2023-10-27')
         formData.append('attendance', 'Present')
-        // ...
+        formData.append('stress', 'Low')
+        formData.append('agenda', 'Study Plan')
+        formData.append('issues', 'None')
+        formData.append('learnerType', 'Visual')
+        formData.append('agenda', 'Study Plan')
+        formData.append('issues', 'None')
+        formData.append('learnerType', 'Visual')
+        formData.append('nextDate', '')
+        formData.append('staffOpinion', 'Good')
+        formData.append('studentOpinion', 'Helpful')
+        formData.append('isParentPresent', 'off')
+        formData.append('parentName', '')
+        formData.append('parentMobile', '')
+        formData.append('parentOpinion', '')
 
-        await AddMentoring(formData)
+        const res = await AddMentoring(null, formData)
+        if (res && res.success === false) { console.log('Validation errors:', res.errors); }
 
         expect(prisma.studentmentoring.create).toHaveBeenCalledWith(
             expect.objectContaining({

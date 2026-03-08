@@ -1,10 +1,11 @@
 'use client' // This solves the 'styled-jsx' Server Component error
 
-import React from 'react'
+import React, { useActionState } from 'react'
 import Link from 'next/link'
 import { editStudentMentor } from '@/app/action/editStudentMentor'
 
-export default function EditMentorForm ({ assignment }: { assignment: any }) {
+export default function EditMentorForm({ assignment }: { assignment: any }) {
+  const [state, formAction, isPending] = useActionState(editStudentMentor, null)
   // SAFETY CHECK: This solves the 'Cannot read StudentMentorID of undefined' error
   if (!assignment) {
     return (
@@ -26,7 +27,13 @@ export default function EditMentorForm ({ assignment }: { assignment: any }) {
         </div>
 
         <div className='card-body p-4 p-md-5'>
-          <form action={editStudentMentor}>
+          {state?.success === false && (
+            <div className='alert alert-danger shadow-sm rounded-3 mb-4'>
+              <i className='bi bi-exclamation-triangle-fill me-2'></i>
+              {state.message}
+            </div>
+          )}
+          <form action={formAction}>
             {/* Optional Chaining (?.) for safe property access */}
             <input
               type='hidden'
@@ -45,13 +52,13 @@ export default function EditMentorForm ({ assignment }: { assignment: any }) {
                   defaultValue={
                     assignment?.FromDate
                       ? new Date(assignment.FromDate)
-                          .toISOString()
-                          .split('T')[0]
+                        .toISOString()
+                        .split('T')[0]
                       : ''
                   }
-                  className='form-control bg-body-tertiary border-secondary-subtle text-body shadow-none'
-                  required
+                  className={`form-control bg-body-tertiary border-secondary-subtle text-body shadow-none ${state?.errors?.FromDate ? 'is-invalid' : ''}`}
                 />
+                {state?.errors?.FromDate && <div className="text-danger small mt-1">{state.errors.FromDate[0]}</div>}
               </div>
 
               <div className='col-md-6'>
@@ -66,8 +73,9 @@ export default function EditMentorForm ({ assignment }: { assignment: any }) {
                       ? new Date(assignment.ToDate).toISOString().split('T')[0]
                       : ''
                   }
-                  className='form-control bg-body-tertiary border-secondary-subtle text-body shadow-none'
+                  className={`form-control bg-body-tertiary border-secondary-subtle text-body shadow-none ${state?.errors?.ToDate ? 'is-invalid' : ''}`}
                 />
+                {state?.errors?.ToDate && <div className="text-danger small mt-1">{state.errors.ToDate[0]}</div>}
               </div>
 
               <div className='col-12'>
@@ -77,9 +85,10 @@ export default function EditMentorForm ({ assignment }: { assignment: any }) {
                 <textarea
                   name='Description'
                   defaultValue={assignment?.Description || ''}
-                  className='form-control bg-body-tertiary border-secondary-subtle text-body shadow-none'
+                  className={`form-control bg-body-tertiary border-secondary-subtle text-body shadow-none ${state?.errors?.Description ? 'is-invalid' : ''}`}
                   rows={3}
                 />
+                {state?.errors?.Description && <div className="text-danger small mt-1">{state.errors.Description[0]}</div>}
               </div>
             </div>
 
@@ -92,9 +101,17 @@ export default function EditMentorForm ({ assignment }: { assignment: any }) {
               </Link>
               <button
                 type='submit'
+                disabled={isPending}
                 className='btn btn-primary rounded-pill px-5 fw-bold shadow-sm'
               >
-                Update Assignment
+                {isPending ? (
+                  <>
+                    <span className='spinner-border spinner-border-sm me-2'></span>
+                    Updating...
+                  </>
+                ) : (
+                  'Update Assignment'
+                )}
               </button>
             </div>
           </form>

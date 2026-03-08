@@ -9,7 +9,7 @@ interface StaffMember {
   StaffName: string
 }
 
-export default function AddStudentForm ({
+export default function AddStudentForm({
   staffList
 }: {
   staffList: StaffMember[]
@@ -72,10 +72,12 @@ export default function AddStudentForm ({
                       <input
                         type='text'
                         name='EnrollmentNo'
-                        className='form-control bg-body border-start-0 shadow-none'
-                        required
+                        className={`form-control bg-body border-start-0 shadow-none ${state?.errors?.EnrollmentNo ? 'is-invalid' : ''}`}
                       />
                     </div>
+                    {state?.errors?.EnrollmentNo && (
+                      <div className="text-danger small mt-1">{state.errors.EnrollmentNo[0]}</div>
+                    )}
                   </div>
 
                   <div className='col-md-6'>
@@ -89,10 +91,12 @@ export default function AddStudentForm ({
                       <input
                         type='password'
                         name='Password'
-                        className='form-control bg-body border-start-0 shadow-none'
-                        required
+                        className={`form-control bg-body border-start-0 shadow-none ${state?.errors?.Password ? 'is-invalid' : ''}`}
                       />
                     </div>
+                    {state?.errors?.Password && (
+                      <div className="text-danger small mt-1">{state.errors.Password[0]}</div>
+                    )}
                   </div>
 
                   <div className='col-12 border-bottom pb-2 mt-5'>
@@ -108,9 +112,11 @@ export default function AddStudentForm ({
                     <input
                       type='text'
                       name='StudentName'
-                      className='form-control bg-body shadow-none'
-                      required
+                      className={`form-control bg-body shadow-none ${state?.errors?.StudentName ? 'is-invalid' : ''}`}
                     />
+                    {state?.errors?.StudentName && (
+                      <div className="text-danger small mt-1">{state.errors.StudentName[0]}</div>
+                    )}
                   </div>
 
                   <div className='col-md-6'>
@@ -120,8 +126,11 @@ export default function AddStudentForm ({
                     <input
                       type='tel'
                       name='MobileNo'
-                      className='form-control bg-body shadow-none'
+                      className={`form-control bg-body shadow-none ${state?.errors?.MobileNo ? 'is-invalid' : ''}`}
                     />
+                    {state?.errors?.MobileNo && (
+                      <div className="text-danger small mt-1">{state.errors.MobileNo[0]}</div>
+                    )}
                   </div>
 
                   <div className='col-md-6'>
@@ -131,8 +140,11 @@ export default function AddStudentForm ({
                     <input
                       type='email'
                       name='EmailAddress'
-                      className='form-control bg-body shadow-none'
+                      className={`form-control bg-body shadow-none ${state?.errors?.EmailAddress ? 'is-invalid' : ''}`}
                     />
+                    {state?.errors?.EmailAddress && (
+                      <div className="text-danger small mt-1">{state.errors.EmailAddress[0]}</div>
+                    )}
                   </div>
 
                   <div className='col-12 border-bottom pb-2 mt-5'>
@@ -151,8 +163,7 @@ export default function AddStudentForm ({
                       </span>
                       <select
                         name='StaffID'
-                        className='form-select bg-body border-start-0 shadow-none'
-                        required
+                        className={`form-select bg-body border-start-0 shadow-none ${state?.errors?.StaffID ? 'is-invalid' : ''}`}
                       >
                         <option value=''>Choose a mentor...</option>
                         {staffList?.map(staff => (
@@ -162,6 +173,9 @@ export default function AddStudentForm ({
                         ))}
                       </select>
                     </div>
+                    {state?.errors?.StaffID && (
+                      <div className="text-danger small mt-1">{state.errors.StaffID[0]}</div>
+                    )}
                   </div>
 
                   <div className='col-12'>
@@ -170,10 +184,13 @@ export default function AddStudentForm ({
                     </label>
                     <textarea
                       name='Description'
-                      className='form-control bg-body shadow-none'
+                      className={`form-control bg-body shadow-none ${state?.errors?.Description ? 'is-invalid' : ''}`}
                       rows={3}
                       placeholder='Notes about student...'
                     ></textarea>
+                    {state?.errors?.Description && (
+                      <div className="text-danger small mt-1">{state.errors.Description[0]}</div>
+                    )}
                   </div>
 
                   <div className='col-12 pt-4 border-top mt-5'>

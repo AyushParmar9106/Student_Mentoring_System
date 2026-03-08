@@ -104,16 +104,19 @@ function ForgotPasswordContent() {
                             <input
                                 type='text'
                                 name='identifier'
-                                className='form-control bg-body-tertiary border-secondary-subtle text-body rounded-end-3'
+                                className={`form-control bg-body-tertiary border-secondary-subtle text-body rounded-end-3 ${state?.errors?.identifier ? 'is-invalid' : ''}`}
                                 placeholder='Enrollment No / Email / Mobile / Name'
-                                required
                                 value={identifier}
                                 onChange={(e) => setIdentifier(e.target.value)}
                             />
                         </div>
-                        <div className='form-text small text-body-secondary'>
-                            Enter your Enrollment No, Email, Mobile No, or Full Name.
-                        </div>
+                        {state?.errors?.identifier ? (
+                            <div className="text-danger small mt-1">{state.errors.identifier[0]}</div>
+                        ) : (
+                            <div className='form-text small text-body-secondary'>
+                                Enter your Enrollment No, Email, Mobile No, or Full Name.
+                            </div>
+                        )}
                     </div>
 
                     {/* New Password Input */}
@@ -128,11 +131,13 @@ function ForgotPasswordContent() {
                             <input
                                 type='password'
                                 name='newPassword'
-                                className='form-control bg-body-tertiary border-secondary-subtle text-body rounded-end-3'
+                                className={`form-control bg-body-tertiary border-secondary-subtle text-body rounded-end-3 ${state?.errors?.newPassword ? 'is-invalid' : ''}`}
                                 placeholder='Enter new password'
-                                required
                             />
                         </div>
+                        {state?.errors?.newPassword && (
+                            <div className="text-danger small mt-1">{state.errors.newPassword[0]}</div>
+                        )}
                     </div>
 
                     {/* Actions */}

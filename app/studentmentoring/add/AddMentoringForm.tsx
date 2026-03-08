@@ -1,28 +1,28 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useActionState, useEffect } from 'react'
 import Link from 'next/link'
 import { AddMentoring } from '@/app/action/AddMentoring'
 import { UploadButton } from '@/app/utils/uploadthing'
 
 export default function AddMentoringForm({ assignmentId }: { assignmentId: number }) {
+    const [state, formAction, isPending] = useActionState(AddMentoring, null)
     const [isParentVisible, setIsParentVisible] = useState(false)
-    const [isSubmitting, setIsSubmitting] = useState(false)
     const [uploadedFileUrl, setUploadedFileUrl] = useState<string | null>(null)
 
-    // Wrapper to handle submit loading state
-    async function handleSubmit(formData: FormData) {
-        setIsSubmitting(true)
-        await AddMentoring(formData)
-    }
-
     return (
-        <form action={handleSubmit} className='card border-0 shadow-sm rounded-4 bg-body overflow-hidden'>
+        <form action={formAction} className='card border-0 shadow-sm rounded-4 bg-body overflow-hidden'>
             <div className='card-header bg-dark py-3'>
                 <h5 className='mb-0 text-white fw-bold'>Session Details</h5>
             </div>
 
             <div className='card-body p-4'>
+                {state?.success === false && (
+                    <div className='alert alert-danger mb-4 rounded-3 border-danger-subtle'>
+                        <i className='bi bi-exclamation-triangle-fill me-2'></i>
+                        {state.message}
+                    </div>
+                )}
                 <input type='hidden' name='assignmentId' value={assignmentId} />
 
                 <div className='row g-4'>
@@ -34,9 +34,11 @@ export default function AddMentoringForm({ assignmentId }: { assignmentId: numbe
                         <input
                             type='date'
                             name='date'
-                            className='form-control bg-body-tertiary border-secondary-subtle text-body rounded-3'
-                            required
+                            className={`form-control bg-body-tertiary border-secondary-subtle text-body rounded-3 ${state?.errors?.date ? 'is-invalid' : ''}`}
                         />
+                        {state?.errors?.date && (
+                            <div className="text-danger small mt-1">{state.errors.date[0]}</div>
+                        )}
                     </div>
 
                     <div className='col-md-4'>
@@ -45,11 +47,14 @@ export default function AddMentoringForm({ assignmentId }: { assignmentId: numbe
                         </label>
                         <select
                             name='attendance'
-                            className='form-select bg-body-tertiary border-secondary-subtle text-body rounded-3'
+                            className={`form-select bg-body-tertiary border-secondary-subtle text-body rounded-3 ${state?.errors?.attendance ? 'is-invalid' : ''}`}
                         >
                             <option value='Present'>Present</option>
                             <option value='Absent'>Absent</option>
                         </select>
+                        {state?.errors?.attendance && (
+                            <div className="text-danger small mt-1">{state.errors.attendance[0]}</div>
+                        )}
                     </div>
 
                     <div className='col-md-4'>
@@ -58,12 +63,15 @@ export default function AddMentoringForm({ assignmentId }: { assignmentId: numbe
                         </label>
                         <select
                             name='stress'
-                            className='form-select bg-body-tertiary border-secondary-subtle text-body rounded-3'
+                            className={`form-select bg-body-tertiary border-secondary-subtle text-body rounded-3 ${state?.errors?.stress ? 'is-invalid' : ''}`}
                         >
                             <option value='Low'>Low</option>
                             <option value='Medium'>Medium</option>
                             <option value='High'>High</option>
                         </select>
+                        {state?.errors?.stress && (
+                            <div className="text-danger small mt-1">{state.errors.stress[0]}</div>
+                        )}
                     </div>
 
                     {/* Discussion Content */}
@@ -73,10 +81,13 @@ export default function AddMentoringForm({ assignmentId }: { assignmentId: numbe
                         </label>
                         <textarea
                             name='agenda'
-                            className='form-control bg-body-tertiary border-secondary-subtle text-body rounded-3'
+                            className={`form-control bg-body-tertiary border-secondary-subtle text-body rounded-3 ${state?.errors?.agenda ? 'is-invalid' : ''}`}
                             rows={2}
                             placeholder='What objectives were planned for this session?'
                         ></textarea>
+                        {state?.errors?.agenda && (
+                            <div className="text-danger small mt-1">{state.errors.agenda[0]}</div>
+                        )}
                     </div>
 
                     <div className='col-12'>
@@ -85,10 +96,13 @@ export default function AddMentoringForm({ assignmentId }: { assignmentId: numbe
                         </label>
                         <textarea
                             name='issues'
-                            className='form-control bg-body-tertiary border-secondary-subtle text-body rounded-3'
+                            className={`form-control bg-body-tertiary border-secondary-subtle text-body rounded-3 ${state?.errors?.issues ? 'is-invalid' : ''}`}
                             rows={3}
                             placeholder='Summary or list of topics discussed...'
                         ></textarea>
+                        {state?.errors?.issues && (
+                            <div className="text-danger small mt-1">{state.errors.issues[0]}</div>
+                        )}
                     </div>
 
                     {/* Student Profiling */}
@@ -113,8 +127,11 @@ export default function AddMentoringForm({ assignmentId }: { assignmentId: numbe
                         <input
                             type='date'
                             name='nextDate'
-                            className='form-control bg-body-tertiary border-secondary-subtle text-body rounded-3'
+                            className={`form-control bg-body-tertiary border-secondary-subtle text-body rounded-3 ${state?.errors?.nextDate ? 'is-invalid' : ''}`}
                         />
+                        {state?.errors?.nextDate && (
+                            <div className="text-danger small mt-1">{state.errors.nextDate[0]}</div>
+                        )}
                     </div>
 
                     <div className='col-12'>
@@ -256,11 +273,11 @@ export default function AddMentoringForm({ assignmentId }: { assignmentId: numbe
                     <div className='col-12 mt-4 pt-3 border-top border-secondary-subtle d-flex gap-3'>
                         <button
                             type='submit'
-                            disabled={isSubmitting}
+                            disabled={isPending}
                             className='btn btn-dark px-5 py-2 rounded-pill fw-bold shadow-sm'
                         >
                             <i className='bi bi-check2-circle me-2'></i>
-                            {isSubmitting ? 'Saving...' : 'Save Session Record'}
+                            {isPending ? 'Saving...' : 'Save Session Record'}
                         </button>
                         <Link
                             href='/staff'

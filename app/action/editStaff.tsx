@@ -3,22 +3,39 @@
 import { prisma } from '@/app/lib/prisma'
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
+import { editStaffSchema } from '@/app/lib/zodSchemas'
 
-async function editStaff (formData: FormData) {
-  // Extract the ID from the form and convert to number
-  const StaffID = Number(formData.get('StaffID'))
+async function editStaff(prevState: any, formData: FormData) {
+  const validatedFields = editStaffSchema.safeParse({
+    StaffID: formData.get('StaffID'),
+    StaffName: formData.get('StaffName'),
+    MobileNo: formData.get('MobileNo'),
+    EmailAddress: formData.get('EmailAddress'),
+    Password: formData.get('Password'),
+    Description: formData.get('Description'),
+  })
+
+  if (!validatedFields.success) {
+    return {
+      success: false,
+      message: 'Please review the highlighted errors.',
+      errors: validatedFields.error.flatten().fieldErrors,
+    }
+  }
+
+  const { StaffID, StaffName, MobileNo, EmailAddress, Password, Description } = validatedFields.data
 
   const saveObj = {
-    StaffName: formData.get('StaffName') as string,
-    MobileNo: formData.get('MobileNo') as string,
-    EmailAddress: formData.get('EmailAddress') as string,
-    Password: formData.get('Password') as string,
-    Description: formData.get('Description') as string
+    StaffName,
+    MobileNo: MobileNo || '',
+    EmailAddress,
+    Password: Password || '',
+    Description: Description || ''
   }
 
   await prisma.staff.update({
     where: {
-      StaffID: StaffID
+      StaffID: Number(StaffID)
     },
     data: saveObj
   })

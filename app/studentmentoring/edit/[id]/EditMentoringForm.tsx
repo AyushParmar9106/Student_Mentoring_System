@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useState, useActionState, useEffect } from 'react'
 import Link from 'next/link'
 import { editStudentMentoring } from '@/app/action/editStudentMentoring'
 import { UploadButton } from '@/app/utils/uploadthing'
@@ -10,8 +10,7 @@ const formatDate = (date: any) =>
   date ? new Date(date).toISOString().split('T')[0] : ''
 
 export default function EditMentoringForm({ assignment }: { assignment: any }) {
-  const [error, setError] = useState<string | null>(null)
-  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [state, formAction, isPending] = useActionState(editStudentMentoring, null)
   const [isParentVisible, setIsParentVisible] = useState(assignment?.IsParentPresent || false)
   const [uploadedFileUrl, setUploadedFileUrl] = useState<string | null>(null)
 
@@ -25,40 +24,8 @@ export default function EditMentoringForm({ assignment }: { assignment: any }) {
     )
   }
 
-  /* ---------- Client Validation Wrapper ---------- */
-  async function clientAction(formData: FormData) {
-    const mentoringDate = formData.get('date') as string
-    const nextDate = formData.get('nextDate') as string
-
-    if (mentoringDate && nextDate) {
-      if (new Date(nextDate) < new Date(mentoringDate)) {
-        setError('Next Follow-up Date cannot be earlier than Mentoring Date.')
-        window.scrollTo({ top: 0, behavior: 'smooth' })
-        return
-      }
-    }
-
-    setError(null)
-    setIsSubmitting(true)
-
-    try {
-      await editStudentMentoring(formData)
-    } catch {
-      setError('Something went wrong while updating the record.')
-      setIsSubmitting(false)
-    }
-  }
-
   return (
     <div className='container py-5'>
-      {/* ---------- Error Alert ---------- */}
-      {error && (
-        <div className='alert alert-danger shadow-sm rounded-3'>
-          <i className='bi bi-exclamation-triangle-fill me-2'></i>
-          {error}
-        </div>
-      )}
-
       {/* ---------- Main Card ---------- */}
       <div
         className='card shadow-lg border-0 rounded-4 mx-auto'
@@ -75,8 +42,14 @@ export default function EditMentoringForm({ assignment }: { assignment: any }) {
           </span>
         </div>
 
-        <form action={clientAction}>
+        <form action={formAction}>
           <div className='card-body p-4 p-md-5'>
+            {state?.success === false && (
+              <div className='alert alert-danger shadow-sm rounded-3'>
+                <i className='bi bi-exclamation-triangle-fill me-2'></i>
+                {state.message}
+              </div>
+            )}
             {/* Hidden ID */}
             <input
               type='hidden'
@@ -96,35 +69,37 @@ export default function EditMentoringForm({ assignment }: { assignment: any }) {
                 <input
                   type='date'
                   name='date'
-                  className='form-control'
+                  className={`form-control ${state?.errors?.date ? 'is-invalid' : ''}`}
                   defaultValue={formatDate(assignment.DateOfMentoring)}
-                  required
                 />
+                {state?.errors?.date && <div className="text-danger small mt-1">{state.errors.date[0]}</div>}
               </div>
 
               <div className='col-md-4'>
                 <label className='form-label fw-semibold'>Attendance</label>
                 <select
                   name='attendance'
-                  className='form-select'
+                  className={`form-select ${state?.errors?.attendance ? 'is-invalid' : ''}`}
                   defaultValue={assignment.AttendanceStatus}
                 >
                   <option value='Present'>Present</option>
                   <option value='Absent'>Absent</option>
                 </select>
+                {state?.errors?.attendance && <div className="text-danger small mt-1">{state.errors.attendance[0]}</div>}
               </div>
 
               <div className='col-md-4'>
                 <label className='form-label fw-semibold'>Stress Level</label>
                 <select
                   name='stress'
-                  className='form-select'
+                  className={`form-select ${state?.errors?.stress ? 'is-invalid' : ''}`}
                   defaultValue={assignment.StressLevel}
                 >
                   <option value='Low'>Low</option>
                   <option value='Medium'>Medium</option>
                   <option value='High'>High</option>
                 </select>
+                {state?.errors?.stress && <div className="text-danger small mt-1">{state.errors.stress[0]}</div>}
               </div>
             </div>
 
@@ -141,20 +116,21 @@ export default function EditMentoringForm({ assignment }: { assignment: any }) {
               <input
                 type='text'
                 name='agenda'
-                className='form-control'
+                className={`form-control ${state?.errors?.agenda ? 'is-invalid' : ''}`}
                 defaultValue={assignment.MentoringMeetingAgenda || ''}
-                required
               />
+              {state?.errors?.agenda && <div className="text-danger small mt-1">{state.errors.agenda[0]}</div>}
             </div>
 
             <div className='mb-3'>
               <label className='form-label fw-semibold'>Issues Discussed</label>
               <textarea
                 name='issues'
-                className='form-control'
+                className={`form-control ${state?.errors?.issues ? 'is-invalid' : ''}`}
                 rows={3}
                 defaultValue={assignment.IssuesDiscussed || ''}
               />
+              {state?.errors?.issues && <div className="text-danger small mt-1">{state.errors.issues[0]}</div>}
             </div>
 
             <hr className='my-4' />
@@ -186,9 +162,10 @@ export default function EditMentoringForm({ assignment }: { assignment: any }) {
                 <input
                   type='date'
                   name='nextDate'
-                  className='form-control'
+                  className={`form-control ${state?.errors?.nextDate ? 'is-invalid' : ''}`}
                   defaultValue={formatDate(assignment.NextMentoringDate)}
                 />
+                {state?.errors?.nextDate && <div className="text-danger small mt-1">{state.errors.nextDate[0]}</div>}
               </div>
             </div>
 
@@ -352,10 +329,10 @@ export default function EditMentoringForm({ assignment }: { assignment: any }) {
 
             <button
               type='submit'
-              disabled={isSubmitting}
+              disabled={isPending}
               className='btn btn-primary px-4'
             >
-              {isSubmitting ? (
+              {isPending ? (
                 <>
                   <span className='spinner-border spinner-border-sm me-2'></span>
                   Updating...

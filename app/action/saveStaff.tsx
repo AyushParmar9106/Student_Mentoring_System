@@ -3,22 +3,36 @@
 import { prisma } from '@/app/lib/prisma'
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
+import { staffSchema } from '@/app/lib/zodSchemas'
 
-export async function saveStaff (prevState: any, formData: FormData) {
-  const StaffName = formData.get('StaffName') as string
-  const EmailAddress = formData.get('EmailAddress') as string
-  const Password = formData.get('Password') as string
-  const MobileNo = formData.get('MobileNo') as string
-  const Description = formData.get('Description') as string
+export async function saveStaff(prevState: any, formData: FormData) {
+  const validatedFields = staffSchema.safeParse({
+    StaffName: formData.get('StaffName'),
+    EmailAddress: formData.get('EmailAddress'),
+    Password: formData.get('Password'),
+    MobileNo: formData.get('MobileNo'),
+    Description: formData.get('Description'),
+  })
+
+  if (!validatedFields.success) {
+    return {
+      success: false,
+      errors: validatedFields.error.flatten().fieldErrors,
+      message: 'Please correct the errors in the form.',
+    }
+  }
+
+  const { StaffName, EmailAddress, Password, MobileNo, Description } = validatedFields.data
+
 
   try {
     await prisma.staff.create({
       data: {
         StaffName,
         EmailAddress,
-        Password, // Reminder: Hash this in production!
-        MobileNo,
-        Description
+        Password: Password || '', // Reminder: Hash this in production!
+        MobileNo: MobileNo || '',
+        Description: Description || ''
       }
     })
   } catch (error) {

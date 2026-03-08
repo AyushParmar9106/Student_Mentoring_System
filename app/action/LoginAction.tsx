@@ -2,11 +2,26 @@
 import { prisma } from '@/app/lib/prisma'
 import { redirect } from 'next/navigation'
 import { login } from '@/app/lib/auth'
+import { loginSchema } from '@/app/lib/zodSchemas'
 
 export async function LoginAction(prevState: any, formData: FormData) {
-  const role = formData.get('role')
-  const username = (formData.get('username') as string)?.trim()
-  const password = (formData.get('password') as string)?.trim()
+  const validatedFields = loginSchema.safeParse({
+    role: formData.get('role'),
+    username: formData.get('username'),
+    password: formData.get('password'),
+  })
+
+  // Ensure role is a string for logging, fallback to '' if not provided
+  const rawRole = formData.get('role') as string || ''
+
+  if (!validatedFields.success) {
+    return {
+      error: 'Please fill all required fields correctly.',
+      errors: validatedFields.error.flatten().fieldErrors,
+    }
+  }
+
+  const { role, username, password } = validatedFields.data
 
   console.log('--- Login Attempt ---')
   console.log('Role:', role)

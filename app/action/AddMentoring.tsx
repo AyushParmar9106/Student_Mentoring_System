@@ -4,36 +4,75 @@ import path from 'path'
 import { prisma } from '@/app/lib/prisma'
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
+import { mentoringSessionSchema } from '@/app/lib/zodSchemas'
 
-export async function AddMentoring(formData: FormData) {
-  const assignmentId = Number(formData.get('assignmentId'))
-
-  // Check for uploaded file URL
+export async function AddMentoring(prevState: any, formData: FormData) {
   const fileUrl = formData.get('fileUrl') as string | null
   let filePath = fileUrl || undefined
+
+  const validatedFields = mentoringSessionSchema.safeParse({
+    assignmentId: formData.get('assignmentId'),
+    date: formData.get('date'),
+    attendance: formData.get('attendance'),
+    stress: formData.get('stress'),
+    agenda: formData.get('agenda'),
+    issues: formData.get('issues'),
+    learnerType: formData.get('learnerType'),
+    nextDate: formData.get('nextDate'),
+    staffOpinion: formData.get('staffOpinion'),
+    studentOpinion: formData.get('studentOpinion'),
+    isParentPresent: formData.get('isParentPresent') === 'on',
+    parentName: formData.get('parentName'),
+    parentMobile: formData.get('parentMobile'),
+    parentOpinion: formData.get('parentOpinion'),
+  })
+
+  if (!validatedFields.success) {
+    return {
+      success: false,
+      message: 'Please review the highlighted fields for errors.',
+      errors: validatedFields.error.flatten().fieldErrors,
+    }
+  }
+
+  const {
+    assignmentId,
+    date,
+    attendance,
+    stress,
+    agenda,
+    issues,
+    learnerType,
+    nextDate,
+    staffOpinion,
+    studentOpinion,
+    isParentPresent,
+    parentName,
+    parentMobile,
+    parentOpinion,
+  } = validatedFields.data
+
 
   try {
     await prisma.studentmentoring.create({
       data: {
-        StudentMentorID: assignmentId,
-        DateOfMentoring: new Date(formData.get('date') as string),
-        AttendanceStatus: formData.get('attendance') as string,
-        StressLevel: formData.get('stress') as string,
-        MentoringMeetingAgenda: formData.get('agenda') as string,
-        IssuesDiscussed: formData.get('issues') as string,
-        LearnerType: formData.get('learnerType') as string,
-        NextMentoringDate: formData.get('nextDate')
-          ? new Date(formData.get('nextDate') as string)
-          : null,
-        StaffOpinion: formData.get('staffOpinion') as string,
+        StudentMentorID: Number(assignmentId),
+        DateOfMentoring: new Date(date),
+        AttendanceStatus: attendance,
+        StressLevel: stress,
+        MentoringMeetingAgenda: agenda,
+        IssuesDiscussed: issues,
+        LearnerType: learnerType,
+        NextMentoringDate: nextDate ? new Date(nextDate) : null,
+        StaffOpinion: staffOpinion || '',
         MentoringDocument: filePath, // Save the file path
 
         // NEW FIELDS for Week 9 Completeness (Student/Parent)
-        StudentsOpinion: formData.get('studentOpinion') as string,
-        IsParentPresent: formData.get('isParentPresent') === 'on',
-        ParentName: (formData.get('parentName') as string) || null,
-        ParentMobileNo: (formData.get('parentMobile') as string) || null,
-        ParentsOpinion: (formData.get('parentOpinion') as string) || null
+        StudentsOpinion: studentOpinion || '',
+        IsParentPresent: isParentPresent || false,
+        ParentName: parentName || null,
+        ParentMobileNo: parentMobile || null,
+        ParentsOpinion: parentOpinion || null
       }
     })
   } catch (e: any) {
@@ -44,8 +83,9 @@ export async function AddMentoring(formData: FormData) {
     if (e.code === 'P2002') {
       console.error('Unique constraint violation:', e.meta)
       // You could redirect to a specific error page or return a value
+      return { success: false, message: 'This record already exists.' }
     }
-    throw e; // Re-throw to ensure the server action fails
+    return { success: false, message: 'An unexpected error occurred.' }
   }
 
   revalidatePath('/studentmentoring')

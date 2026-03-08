@@ -3,27 +3,40 @@
 import { prisma } from '@/app/lib/prisma'
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
+import { editStudentMentorSchema } from '@/app/lib/zodSchemas'
 
-export async function editStudentMentor (formData: FormData) {
-  const StudentMentorID = Number(formData.get('StudentMentorID'))
+export async function editStudentMentor(prevState: any, formData: FormData) {
+  const validatedFields = editStudentMentorSchema.safeParse({
+    StudentMentorID: formData.get('StudentMentorID'),
+    StudentID: formData.get('StudentID'),
+    StaffID: formData.get('StaffID'),
+    FromDate: formData.get('FromDate'),
+    ToDate: formData.get('ToDate'),
+    Description: formData.get('Description'),
+  })
 
-  // Safely handle dates to satisfy Prisma's strict update types
-  const fromDateVal = formData.get('FromDate') as string
-  const toDateVal = formData.get('ToDate') as string
+  if (!validatedFields.success) {
+    return {
+      success: false,
+      message: 'Please review the highlighted errors.',
+      errors: validatedFields.error.flatten().fieldErrors,
+    }
+  }
+
+  const { StudentMentorID, StudentID, StaffID, FromDate, ToDate, Description } = validatedFields.data
 
   const saveObj = {
-    StudentID: Number(formData.get('StudentID')),
-    StaffID: Number(formData.get('StaffID')),
-    // Ensure we provide a valid Date object or null
-    FromDate: fromDateVal ? new Date(fromDateVal) : new Date(),
-    ToDate: toDateVal ? new Date(toDateVal) : null,
-    Description: (formData.get('Description') as string) || '',
+    StudentID: Number(StudentID),
+    StaffID: Number(StaffID),
+    FromDate: FromDate ? new Date(FromDate) : new Date(),
+    ToDate: ToDate ? new Date(ToDate) : null,
+    Description: Description || '',
     Modified: new Date()
   }
 
   try {
     await prisma.studentmentor.update({
-      where: { StudentMentorID: StudentMentorID },
+      where: { StudentMentorID: Number(StudentMentorID) },
       data: saveObj
     })
   } catch (error) {

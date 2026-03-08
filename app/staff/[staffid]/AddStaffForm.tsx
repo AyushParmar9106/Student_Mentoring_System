@@ -5,7 +5,7 @@ import { useActionState, useTransition } from 'react'
 import Link from 'next/link'
 import { saveStaff } from '@/app/action/saveStaff'
 
-export default function AddStaffForm () {
+export default function AddStaffForm() {
   const [state, formAction] = useActionState(saveStaff, null)
   const [isPending, startTransition] = useTransition()
 
@@ -65,11 +65,13 @@ export default function AddStaffForm () {
                       <input
                         type='email'
                         name='EmailAddress'
-                        className='form-control bg-body border-start-0 shadow-none'
+                        className={`form-control bg-body border-start-0 shadow-none ${state?.errors?.EmailAddress ? 'is-invalid' : ''}`}
                         placeholder='staff@institution.com'
-                        required
                       />
                     </div>
+                    {state?.errors?.EmailAddress && (
+                      <div className="text-danger small mt-1">{state.errors.EmailAddress[0]}</div>
+                    )}
                   </div>
 
                   <div className='col-md-6'>
@@ -83,10 +85,12 @@ export default function AddStaffForm () {
                       <input
                         type='password'
                         name='Password'
-                        className='form-control bg-body border-start-0 shadow-none'
-                        required
+                        className={`form-control bg-body border-start-0 shadow-none ${state?.errors?.Password ? 'is-invalid' : ''}`}
                       />
                     </div>
+                    {state?.errors?.Password && (
+                      <div className="text-danger small mt-1">{state.errors.Password[0]}</div>
+                    )}
                   </div>
 
                   {/* Section 2: Personal Info */}
@@ -103,10 +107,12 @@ export default function AddStaffForm () {
                     <input
                       type='text'
                       name='StaffName'
-                      className='form-control bg-body shadow-none'
+                      className={`form-control bg-body shadow-none ${state?.errors?.StaffName ? 'is-invalid' : ''}`}
                       placeholder='e.g. Dr. Jane Smith'
-                      required
                     />
+                    {state?.errors?.StaffName && (
+                      <div className="text-danger small mt-1">{state.errors.StaffName[0]}</div>
+                    )}
                   </div>
 
                   <div className='col-md-6'>
@@ -120,9 +126,12 @@ export default function AddStaffForm () {
                       <input
                         type='tel'
                         name='MobileNo'
-                        className='form-control bg-body border-start-0 shadow-none'
+                        className={`form-control bg-body border-start-0 shadow-none ${state?.errors?.MobileNo ? 'is-invalid' : ''}`}
                       />
                     </div>
+                    {state?.errors?.MobileNo && (
+                      <div className="text-danger small mt-1">{state.errors.MobileNo[0]}</div>
+                    )}
                   </div>
 
                   <div className='col-12'>
@@ -131,10 +140,13 @@ export default function AddStaffForm () {
                     </label>
                     <textarea
                       name='Description'
-                      className='form-control bg-body shadow-none'
+                      className={`form-control bg-body shadow-none ${state?.errors?.Description ? 'is-invalid' : ''}`}
                       rows={4}
                       placeholder='Department, specializations, or office hours...'
                     ></textarea>
+                    {state?.errors?.Description && (
+                      <div className="text-danger small mt-1">{state.errors.Description[0]}</div>
+                    )}
                   </div>
 
                   {/* Footer Actions */}

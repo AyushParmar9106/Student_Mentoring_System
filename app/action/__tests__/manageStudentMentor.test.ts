@@ -34,7 +34,10 @@ describe('manageStudentMentor Server Action', () => {
         formData.append('FromDate', '2023-10-01')
         formData.append('Description', 'Test Assignment')
 
-        await manageStudentMentor(formData)
+        const res = await manageStudentMentor(null, formData)
+        if (res && res.success === false) {
+            console.log('Validation errors:', res.errors);
+        }
 
         expect(prisma.$transaction).toHaveBeenCalled()
         // Since we mock the transaction callback execution immediately,
@@ -52,8 +55,14 @@ describe('manageStudentMentor Server Action', () => {
 
         const formData = new FormData()
         formData.append('StaffID', '1')
+        formData.append('StudentIDs', '101') // Add required field
+        formData.append('FromDate', '2023-10-01') // Satisfy z.string()
+        formData.append('Description', '') // Satisfy z.string()
 
-        await manageStudentMentor(formData)
+        const res = await manageStudentMentor(null, formData)
+        if (res && res.success === false) {
+            console.log('Validation errors:', res.errors);
+        }
 
         expect(consoleSpy).toHaveBeenCalledWith('Management Error:', expect.any(Error))
         expect(redirect).toHaveBeenCalledWith('/studentmentor')

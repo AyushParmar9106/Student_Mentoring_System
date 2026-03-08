@@ -3,23 +3,41 @@
 import { prisma } from '@/app/lib/prisma'
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
+import { editStudentSchema } from '@/app/lib/zodSchemas'
 
-export async function editStudent (formData: FormData) {
-  // Extract the ID from the form and convert to number
-  const studentId = Number(formData.get('StudentID'))
+export async function editStudent(prevState: any, formData: FormData) {
+  const validatedFields = editStudentSchema.safeParse({
+    StudentID: formData.get('StudentID'),
+    StudentName: formData.get('StudentName'),
+    EnrollmentNo: formData.get('EnrollmentNo'),
+    Password: formData.get('Password'),
+    MobileNo: formData.get('MobileNo'),
+    EmailAddress: formData.get('EmailAddress'),
+    Description: formData.get('Description'),
+  })
+
+  if (!validatedFields.success) {
+    return {
+      success: false,
+      message: 'Please review the highlighted errors.',
+      errors: validatedFields.error.flatten().fieldErrors,
+    }
+  }
+
+  const { StudentID, StudentName, EnrollmentNo, Password, MobileNo, EmailAddress, Description } = validatedFields.data
 
   const saveObj = {
-    StudentName: formData.get('StudentName') as string,
-    EnrollmentNo: formData.get('EnrollmentNo') as string,
-    Password: formData.get('Password') as string,
-    MobileNo: formData.get('MobileNo') as string,
-    EmailAddress: formData.get('EmailAddress') as string,
-    Description: formData.get('Description') as string
+    StudentName,
+    EnrollmentNo,
+    Password: Password || '',
+    MobileNo: MobileNo || '',
+    EmailAddress: EmailAddress || '',
+    Description: Description || ''
   }
 
   await prisma.students.update({
     where: {
-      StudentID: studentId
+      StudentID: Number(StudentID)
     },
     data: saveObj
   })

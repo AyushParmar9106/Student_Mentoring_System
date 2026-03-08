@@ -2,15 +2,23 @@
 
 import { prisma } from '@/app/lib/prisma'
 import { redirect } from 'next/navigation'
+import { forgotPasswordSchema } from '@/app/lib/zodSchemas'
 
 export async function forgotPassword(prevState: any, formData: FormData) {
-    const role = formData.get('role') as string
-    const identifier = (formData.get('identifier') as string)?.trim()
-    const newPassword = (formData.get('newPassword') as string)?.trim()
+    const validatedFields = forgotPasswordSchema.safeParse({
+        role: formData.get('role'),
+        identifier: formData.get('identifier'),
+        newPassword: formData.get('newPassword'),
+    })
 
-    if (!identifier || !newPassword) {
-        return { error: 'Please fill in all fields.' }
+    if (!validatedFields.success) {
+        return {
+            error: 'Please fix the errors below.',
+            errors: validatedFields.error.flatten().fieldErrors,
+        }
     }
+
+    const { role, identifier, newPassword } = validatedFields.data
 
     try {
         if (role === 'Student') {
