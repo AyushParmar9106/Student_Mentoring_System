@@ -21,6 +21,14 @@ jest.mock('next/cache', () => ({
     revalidatePath: jest.fn(),
 }))
 
+jest.mock('next/headers', () => ({
+    cookies: jest.fn().mockResolvedValue({
+        set: jest.fn(),
+        get: jest.fn(),
+        delete: jest.fn(),
+    }),
+}))
+
 describe('manageStudentMentor Server Action', () => {
     beforeEach(() => {
         jest.clearAllMocks();
